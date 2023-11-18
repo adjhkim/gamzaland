@@ -5,7 +5,6 @@ import IconList from 'app/components/IconList';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
-import './style.css';
 
 const Background = styled.div`
   display: flex;
@@ -46,6 +45,10 @@ export function HomePage() {
       <Helmet>
         <title>GamzaLand</title>
         <meta name="description" content="gamzaland" />
+        <style>
+          @import
+          url('https://fonts.googleapis.com/css2?family=Dongle:wght@300;400;700&display=swap');
+        </style>
       </Helmet>
       <Background>
         <Container>
