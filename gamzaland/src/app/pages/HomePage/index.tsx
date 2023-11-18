@@ -1,6 +1,11 @@
+import Header from 'app/components/Header';
+import ImportantNotice from 'app/components/ImportantNotice';
+import ImportantSchedule from 'app/components/ImportantSchedule';
+import IconList from 'app/components/IconList';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
+import './style.css';
 
 const Background = styled.div`
   display: flex;
@@ -11,7 +16,9 @@ const Background = styled.div`
   background-color: #eee;
 `;
 
-const Box = styled.div`
+const Container = styled.div`
+  font-family: 'Dongle';
+  font-size: 1.5rem;
   width: 360px;
   height: 640px;
   background-color: #fff;
@@ -23,34 +30,14 @@ const Box = styled.div`
   }
 `;
 
-const Header = styled.div`
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
   width: 100%;
-  height: 10%;
-  background-color: #f7be81;
-`;
-
-const ImportantNotice = styled.div`
-  width: 90%;
-  height: 40%;
-  margin: 4.5% 5%;
-  background-color: #eee;
-  border-radius: 8px;
-`;
-
-const ImportantSchedule = styled.div`
-  width: 90%;
-  height: 25%;
-  margin: 4.5% 5%;
-  background-color: #eee;
-  border-radius: 8px;
-`;
-
-const IconList = styled.div`
-  width: 90%;
-  height: 15%;
-  margin: 4.5% 5%;
-  background-color: #eee;
-  border-radius: 8px;
+  height: 90%;
+  background-color: #f6e3ce;
 `;
 
 export function HomePage() {
@@ -61,12 +48,14 @@ export function HomePage() {
         <meta name="description" content="gamzaland" />
       </Helmet>
       <Background>
-        <Box>
+        <Container>
           <Header></Header>
-          <ImportantNotice></ImportantNotice>
-          <ImportantSchedule></ImportantSchedule>
-          <IconList></IconList>
-        </Box>
+          <Content>
+            <ImportantNotice></ImportantNotice>
+            <ImportantSchedule></ImportantSchedule>
+            <IconList></IconList>
+          </Content>
+        </Container>
       </Background>
     </>
   );
