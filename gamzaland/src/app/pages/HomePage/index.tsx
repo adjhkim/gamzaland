@@ -17,6 +17,9 @@ const Background = styled.div`
 
 const Container = styled.div`
   font-family: 'Jua', sans-serif;
+  font-size: 0.75rem;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   width: 360px;
   height: 640px;
   background-color: #fff;
