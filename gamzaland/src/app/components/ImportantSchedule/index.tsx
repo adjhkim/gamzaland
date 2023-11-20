@@ -3,12 +3,14 @@ import styled from 'styled-components';
 
 const Box = styled.div`
   width: 90%;
-  height: 25%;
   background-color: #fff;
-  border-radius: 12px;
+  border-radius: 2px;
   box-shadow: 0px 0px 10px -2px rgba(0, 0, 0, 0.25);
+  padding: 2.5%;
+  margin-top: 5%;
+  font-size: 0.75rem;
 `;
 
 export default function ImportantSchedule() {
-  return <Box>중요 일정이 보여요.</Box>;
+  return <Box>중요 일정</Box>;
 }

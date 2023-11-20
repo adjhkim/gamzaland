@@ -16,8 +16,7 @@ const Background = styled.div`
 `;
 
 const Container = styled.div`
-  font-family: 'Dongle';
-  font-size: 1.5rem;
+  font-family: 'Jua', sans-serif;
   width: 360px;
   height: 640px;
   background-color: #fff;
@@ -32,10 +31,10 @@ const Container = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 90%;
+  height: 92.5%;
   background-color: #f6e3ce;
 `;
 
@@ -47,7 +46,7 @@ export function HomePage() {
         <meta name="description" content="gamzaland" />
         <style>
           @import
-          url('https://fonts.googleapis.com/css2?family=Dongle:wght@300;400;700&display=swap');
+          url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
         </style>
       </Helmet>
       <Background>
