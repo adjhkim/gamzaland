@@ -1,7 +1,4 @@
-import Header from 'app/components/Header';
-import ImportantNotice from 'app/components/ImportantNotice';
-import ImportantSchedule from 'app/components/ImportantSchedule';
-import IconList from 'app/components/IconList';
+import { Header } from 'app/components/Header';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
@@ -41,7 +38,7 @@ const Content = styled.div`
   background-color: #f6e3ce;
 `;
 
-export function HomePage() {
+export function HomePage({ content }) {
   return (
     <>
       <Helmet>
@@ -55,11 +52,7 @@ export function HomePage() {
       <Background>
         <Container>
           <Header></Header>
-          <Content>
-            <ImportantNotice></ImportantNotice>
-            <ImportantSchedule></ImportantSchedule>
-            <IconList></IconList>
-          </Content>
+          <Content>{content}</Content>
         </Container>
       </Background>
     </>

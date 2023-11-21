@@ -1,6 +1,6 @@
 import { lazyLoad } from 'utils/loadable';
 
-export const HomePage = lazyLoad(
+export const Game = lazyLoad(
   () => import('./index'),
-  module => module.HomePage,
+  module => module.Game,
 );

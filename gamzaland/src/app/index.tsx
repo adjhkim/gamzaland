@@ -14,6 +14,10 @@ import { GlobalStyle } from 'styles/global-styles';
 
 import { HomePage } from './pages/HomePage/Loadable';
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
+import { Main } from './pages/Main/Loadable';
+import { Board } from './pages/Board/Loadable';
+import { Calendar } from './pages/Calendar/Loadable';
+import { Game } from './pages/Game/Loadable';
 import { useTranslation } from 'react-i18next';
 
 export function App() {
@@ -29,7 +33,11 @@ export function App() {
       </Helmet>
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage content={() => {}} />} />
+        <Route path="main" element={<Main />} />
+        <Route path="board" element={<Board />} />
+        <Route path="calendar" element={<Calendar />} />
+        <Route path="game" element={<Game />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <GlobalStyle />
