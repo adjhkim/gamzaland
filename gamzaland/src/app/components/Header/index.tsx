@@ -19,7 +19,7 @@ const Box = styled.div`
 export function Header() {
   return (
     <Box>
-      <Navigate src={'../../home.svg'} path={'/main'}></Navigate>
+      <Navigate src={'../../home.svg'} path={'/'}></Navigate>
       <img alt="" src="../../appname.png"></img>
       <img alt="" src="../../menu.svg"></img>
     </Box>

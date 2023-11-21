@@ -12,7 +12,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { GlobalStyle } from 'styles/global-styles';
 
-import { HomePage } from './pages/HomePage/Loadable';
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
 import { Main } from './pages/Main/Loadable';
 import { Board } from './pages/Board/Loadable';
@@ -33,8 +32,7 @@ export function App() {
       </Helmet>
 
       <Routes>
-        <Route path="/" element={<HomePage content={() => {}} />} />
-        <Route path="main" element={<Main />} />
+        <Route path="/" element={<Main />} />
         <Route path="board" element={<Board />} />
         <Route path="calendar" element={<Calendar />} />
         <Route path="game" element={<Game />} />
