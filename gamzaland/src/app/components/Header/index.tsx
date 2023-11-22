@@ -19,9 +19,18 @@ const Box = styled.div`
 export function Header() {
   return (
     <Box>
-      <Navigate src={'../../home.svg'} path={'/'}></Navigate>
-      <img alt="" src="../../appname.png"></img>
-      <img alt="" src="../../menu.svg"></img>
+      <Navigate
+        src={`${process.env.PUBLIC_URL}/public_assets/home.svg`}
+        path={'/'}
+      ></Navigate>
+      <img
+        alt=""
+        src={`${process.env.PUBLIC_URL}/public_assets/appname.png`}
+      ></img>
+      <img
+        alt=""
+        src={`${process.env.PUBLIC_URL}/public_assets/menu.svg`}
+      ></img>
     </Box>
   );
 }

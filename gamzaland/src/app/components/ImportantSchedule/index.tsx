@@ -8,13 +8,14 @@ const Box = styled.div`
 
 const BoxTitle = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   width: 25%;
   background-color: #faac58;
   padding: 1%;
   box-shadow: 2px 0px 2px rgba(0, 0, 0, 0.25);
   border-radius: 4px 4px 0 0;
+  user-select: none;
 `;
 
 const BoxContent = styled.div`

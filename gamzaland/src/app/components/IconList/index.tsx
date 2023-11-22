@@ -9,13 +9,14 @@ const Box = styled.div`
 
 const BoxTitle = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   width: 25%;
   background-color: #faac58;
   padding: 1%;
   box-shadow: 2px 0px 2px rgba(0, 0, 0, 0.25);
   border-radius: 4px 4px 0 0;
+  user-select: none;
 `;
 
 const BoxContent = styled.div`
@@ -27,6 +28,7 @@ const BoxContent = styled.div`
   padding: 5%;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
   border-radius: 0 4px 4px 4px;
+  user-select: none;
 `;
 
 const Circle = styled.div`
@@ -46,13 +48,22 @@ export default function IconList() {
       <BoxTitle>어플리케이션</BoxTitle>
       <BoxContent>
         <Circle>
-          <Navigate src={'../../board.svg'} path={'/board'}></Navigate>
+          <Navigate
+            src={`${process.env.PUBLIC_URL}/public_assets/board.svg`}
+            path={'/board'}
+          ></Navigate>
         </Circle>
         <Circle>
-          <Navigate src={'../../calendar.svg'} path={'/calendar'}></Navigate>
+          <Navigate
+            src={`${process.env.PUBLIC_URL}/public_assets/calendar.svg`}
+            path={'/calendar'}
+          ></Navigate>
         </Circle>
         <Circle>
-          <Navigate src={'../../game.svg'} path={'/game'}></Navigate>
+          <Navigate
+            src={`${process.env.PUBLIC_URL}/public_assets/game.svg`}
+            path={'/game'}
+          ></Navigate>
         </Circle>
       </BoxContent>
     </Box>
