@@ -11,6 +11,13 @@ const Box = styled.table`
   color: #000;
 `;
 
+const TableHead = styled.tr`
+  & > td {
+    background-color: #faac58;
+    padding: 2% 4%;
+  }
+`;
+
 const TableRow = styled.tr`
   & > td {
     background-color: #fff;
@@ -22,6 +29,7 @@ const TableRow = styled.tr`
 const TableCategory = styled.td`
   width: 15%;
   text-align: center;
+  user-select: none;
 `;
 
 const TableTitle = styled.td`
@@ -31,8 +39,23 @@ const TableTitle = styled.td`
 export default function BoardTable() {
   return (
     <Box>
+      <TableHead>
+        <td colSpan={2}></td>
+      </TableHead>
       <TableRow>
         <TableCategory>공지</TableCategory>
+        <TableTitle>제목입니다.</TableTitle>
+      </TableRow>
+      <TableRow>
+        <TableCategory>일반</TableCategory>
+        <TableTitle>제목입니다.</TableTitle>
+      </TableRow>
+      <TableRow>
+        <TableCategory>일반</TableCategory>
+        <TableTitle>제목입니다.</TableTitle>
+      </TableRow>
+      <TableRow>
+        <TableCategory>일반</TableCategory>
         <TableTitle>제목입니다.</TableTitle>
       </TableRow>
       <TableRow>
