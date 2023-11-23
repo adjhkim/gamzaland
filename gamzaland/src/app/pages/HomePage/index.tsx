@@ -1,4 +1,4 @@
-import { Header } from 'app/components/Header';
+import { Header } from 'app/components/compronents-common/Header';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
