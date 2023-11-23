@@ -24,6 +24,7 @@ const SearchTitle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: bold;
   width: 20%;
   height: 100%;
   background-color: #faac58;
@@ -65,6 +66,7 @@ const AddButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: bold;
   width: 15%;
   height: 100%;
   background-color: #faac58;

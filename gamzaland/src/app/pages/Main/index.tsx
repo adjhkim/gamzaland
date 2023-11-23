@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { HomePage } from '../HomePage';
-import ImportantNotice from 'app/components/compoenets-main/ImportantNotice';
-import ImportantSchedule from 'app/components/compoenets-main/ImportantSchedule';
-import IconList from 'app/components/compoenets-main/IconList';
+import ImportantNotice from 'app/components/components-main/ImportantNotice';
+import ImportantSchedule from 'app/components/components-main/ImportantSchedule';
+import IconList from 'app/components/components-main/IconList';
 
 const loadMain = function () {
   return (

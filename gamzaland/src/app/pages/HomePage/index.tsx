@@ -1,4 +1,4 @@
-import { Header } from 'app/components/compronents-common/Header';
+import { Header } from 'app/components/components-common/Header';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
@@ -9,18 +9,17 @@ const Background = styled.div`
   align-items: center;
   width: 100%;
   height: 100vh;
-  background-color: #eee;
+  background-color: #2e2e2e;
 `;
 
 const Container = styled.div`
-  font-family: 'Jua', sans-serif;
-  font-size: 0.75rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.6rem;
   color: #fff;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   width: 360px;
   height: 640px;
   background-color: #fff;
-  box-shadow: 0px 0px 100px -60px rgba(0, 0, 0, 0.5);
 
   @media (max-width: 600px) {
     width: 100%;
@@ -46,7 +45,7 @@ export function HomePage({ content }) {
         <meta name="description" content="gamzaland" />
         <style>
           @import
-          url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+          url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
         </style>
       </Helmet>
       <Background>

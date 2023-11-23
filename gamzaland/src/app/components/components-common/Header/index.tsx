@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Navigate } from 'app/components/compronents-common/Navigate';
+import { Navigate } from 'app/components/components-common';
 
 const Box = styled.div`
   display: flex;

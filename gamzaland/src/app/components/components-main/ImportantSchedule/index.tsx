@@ -10,6 +10,7 @@ const BoxTitle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: bold;
   width: 25%;
   background-color: #faac58;
   padding: 1%;

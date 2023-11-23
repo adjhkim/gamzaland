@@ -12,6 +12,7 @@ const Box = styled.table`
 const TableHead = styled.tr`
   & > td {
     background-color: #faac58;
+    font-weight: bold;
     padding: 2% 4%;
     user-select: none;
     text-align: center;
@@ -29,6 +30,7 @@ const TableRow = styled.tr`
 `;
 
 const TableCategory = styled.td`
+  font-weight: bold;
   width: 20%;
   text-align: center;
   user-select: none;

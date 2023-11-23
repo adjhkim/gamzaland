@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Navigate } from 'app/components/compronents-common/Navigate';
+import { Navigate } from 'app/components/components-common';
 
 const Box = styled.div`
   width: 90%;
@@ -11,6 +11,7 @@ const BoxTitle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: bold;
   width: 25%;
   background-color: #faac58;
   padding: 1%;
