@@ -7,7 +7,7 @@ const Box = styled.div`
   align-items: center;
   font-weight: bold;
   width: 90%;
-  margin-top: 5%;
+  height: 4%;
   text-shadow: none;
   color: #000;
   user-select: none;
@@ -15,9 +15,9 @@ const Box = styled.div`
 
 const SelectMonth = styled.input`
   text-align: center;
-  width: 75%;
+  width: 70%;
   height: 100%;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   padding: 0 5%;
   border: 0;
   outline: 0;
@@ -31,8 +31,8 @@ const Rect = styled.div`
   align-items: center;
   background-color: #faac58;
   border-radius: 4px;
-  width: 24px;
-  height: 24px;
+  width: 10%;
+  height: 100%;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
 `;
 

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Box = styled.table`
   width: 90%;
-  margin-top: 5%;
+  height: 82%;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   border-radius: 4px;
@@ -13,7 +13,7 @@ const TableHead = styled.tr`
   & > td {
     background-color: #faac58;
     font-weight: bold;
-    padding: 2% 4%;
+    padding: 2%;
     user-select: none;
     text-align: center;
   }
@@ -23,7 +23,7 @@ const TableRow = styled.tr`
   & > td {
     background-color: #fff;
     border-bottom: 1px solid #eee;
-    padding: 2% 4%;
+    padding: 2%;
     color: #000;
     text-shadow: none;
   }
@@ -50,6 +50,46 @@ export default function BoardTable() {
         </TableHead>
       </thead>
       <tbody>
+        <TableRow>
+          <TableCategory>공지</TableCategory>
+          <TableTitle>제목입니다.</TableTitle>
+        </TableRow>
+        <TableRow>
+          <TableCategory>일반</TableCategory>
+          <TableTitle>제목입니다.</TableTitle>
+        </TableRow>
+        <TableRow>
+          <TableCategory>일반</TableCategory>
+          <TableTitle>제목입니다.</TableTitle>
+        </TableRow>
+        <TableRow>
+          <TableCategory>일반</TableCategory>
+          <TableTitle>제목입니다.</TableTitle>
+        </TableRow>
+        <TableRow>
+          <TableCategory>일반</TableCategory>
+          <TableTitle>제목입니다.</TableTitle>
+        </TableRow>
+        <TableRow>
+          <TableCategory>공지</TableCategory>
+          <TableTitle>제목입니다.</TableTitle>
+        </TableRow>
+        <TableRow>
+          <TableCategory>일반</TableCategory>
+          <TableTitle>제목입니다.</TableTitle>
+        </TableRow>
+        <TableRow>
+          <TableCategory>일반</TableCategory>
+          <TableTitle>제목입니다.</TableTitle>
+        </TableRow>
+        <TableRow>
+          <TableCategory>일반</TableCategory>
+          <TableTitle>제목입니다.</TableTitle>
+        </TableRow>
+        <TableRow>
+          <TableCategory>일반</TableCategory>
+          <TableTitle>제목입니다.</TableTitle>
+        </TableRow>
         <TableRow>
           <TableCategory>공지</TableCategory>
           <TableTitle>제목입니다.</TableTitle>

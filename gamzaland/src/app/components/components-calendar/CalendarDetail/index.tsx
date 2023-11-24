@@ -5,7 +5,7 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   width: 90%;
-  height: 45%;
+  height: 40%;
 `;
 
 const BoxTitle = styled.div`
@@ -31,12 +31,13 @@ const BoxContent = styled.div`
   padding: 5%;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
   border-radius: 0 4px 4px 4px;
+  user-select: none;
 `;
 
-export default function ImportantNotice() {
+export default function CalendarDetail() {
   return (
     <Box>
-      <BoxTitle>중요 공지</BoxTitle>
+      <BoxTitle>일정 상세 보기</BoxTitle>
       <BoxContent></BoxContent>
     </Box>
   );

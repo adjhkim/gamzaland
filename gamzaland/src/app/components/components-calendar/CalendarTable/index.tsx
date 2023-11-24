@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Box = styled.table`
   width: 90%;
-  margin-top: 5%;
+  height: 46%;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   border-radius: 4px;
@@ -16,7 +16,7 @@ const TableHead = styled.tr`
   & > td {
     background-color: #faac58;
     font-weight: bold;
-    padding: 2% 4%;
+    padding: 2%;
   }
 
   & > td:nth-child(1) {
@@ -32,8 +32,9 @@ const TableRow = styled.tr`
   & > td {
     background-color: #fff;
     border-bottom: 1px solid #eee;
-    padding: 4% 2%;
+    padding: 2%;
     color: #000;
+    font-size: 0.75rem;
     text-shadow: none;
   }
 
@@ -46,12 +47,19 @@ const TableRow = styled.tr`
   }
 `;
 
-const TableCell = styled.td``;
+const ScheduleBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 15%;
+`;
 
-const Schedule = styled.div`
-  border: 1px solid #eee;
-  border-radius: 4px;
-  margin-top: 10%;
+const ScheduleBar = styled.div`
+  width: 90%;
+  height: 100%;
+  color: #000;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25) inset;
+  border-radius: 100px;
 `;
 
 export default function CalendarTable() {
@@ -59,7 +67,7 @@ export default function CalendarTable() {
   const createCalendarHead = function () {
     let result: Array<any> = [];
     for (let i = 0; i < 7; i++) {
-      result.push(<TableCell>{weekName[i]}</TableCell>);
+      result.push(<td>{weekName[i]}</td>);
     }
     return result;
   };
@@ -89,17 +97,21 @@ export default function CalendarTable() {
     for (let i = 0; i < 7; i++) {
       if (i === firstDayWeek && row === 0) {
         result.push(
-          <TableCell>
+          <td>
             <div>{createDateString(firstDay)}</div>
-            <Schedule>-</Schedule>
-          </TableCell>,
+            <ScheduleBox>
+              <ScheduleBar></ScheduleBar>
+            </ScheduleBox>
+          </td>,
         );
       } else {
         result.push(
-          <TableCell>
+          <td>
             <div>{createDateString(nowDay(i - firstDayWeek + row * 7))}</div>
-            <Schedule>-</Schedule>
-          </TableCell>,
+            <ScheduleBox>
+              <ScheduleBar></ScheduleBar>
+            </ScheduleBox>
+          </td>,
         );
       }
     }

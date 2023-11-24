@@ -6,7 +6,7 @@ const Box = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 90%;
-  margin-top: 5%;
+  height: 4%;
 `;
 
 const SearchBox = styled.div`

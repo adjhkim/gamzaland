@@ -14,12 +14,13 @@ const Background = styled.div`
 
 const Container = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 0.6rem;
+  font-size: 0.9rem;
   color: #fff;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  width: 360px;
-  height: 640px;
+  width: 480px;
+  height: 100vh;
   background-color: #fff;
+  transition: all 0.5s;
 
   @media (max-width: 600px) {
     width: 100%;
@@ -30,11 +31,15 @@ const Container = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   align-items: center;
   width: 100%;
   height: 92.5%;
   background-color: #f6e3ce;
+  overflow: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export function HomePage({ content }) {
