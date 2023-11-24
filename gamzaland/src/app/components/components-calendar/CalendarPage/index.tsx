@@ -51,7 +51,7 @@ export default function CalendarPage() {
           src={`${process.env.PUBLIC_URL}/public_assets/before.svg`}
         ></img>
       </Rect>
-      <SelectMonth type="month" value={nowYearMonth()}></SelectMonth>
+      <SelectMonth type="month" defaultValue={nowYearMonth()}></SelectMonth>
       <Rect>
         <img
           alt=""
