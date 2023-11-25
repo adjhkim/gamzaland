@@ -2,7 +2,6 @@ import { Header } from 'app/components/components-common/Header';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
-import { JsxElement } from 'typescript';
 
 const Background = styled.div`
   display: flex;
