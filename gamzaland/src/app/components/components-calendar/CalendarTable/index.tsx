@@ -37,17 +37,28 @@ const TableBodyRow = styled.tr`
     color: #000;
   }
 
-  & > td:nth-child(1) div {
+  & > td:nth-child(1) div:not(.notThisMonth) {
     color: red;
   }
 
-  & > td:nth-child(7) div {
+  & > td:nth-child(7) div:not(.notThisMonth) {
     color: blue;
   }
 `;
 
 const TableCell = styled.td`
   padding: 2%;
+
+  & > .notThisMonth {
+    color: #eee;
+  }
+
+  & > .todayOfCalendar {
+    font-weight: bold;
+    background-color: #eee;
+    border-radius: 100px;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+  }
 `;
 
 const DateString = styled.div`
@@ -58,11 +69,20 @@ const DateString = styled.div`
 const ScheduleBar = styled.div`
   width: 100%;
   height: 15%;
+  margin-top: 10%;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25) inset;
   border-radius: 100px;
 `;
 
-export default function CalendarTable() {
+export default function CalendarTable({
+  inputYear,
+  inputMonth,
+  today,
+}: {
+  inputYear: number;
+  inputMonth: number;
+  today: Date;
+}) {
   const weekName = ['일', '월', '화', '수', '목', '금', '토'];
   const createCalendarHead = function () {
     let result: Array<any> = [];
@@ -72,17 +92,22 @@ export default function CalendarTable() {
     return result;
   };
 
-  const today = new Date();
-  const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+  const firstDay = new Date(inputYear, inputMonth - 1, 1);
   const firstDayWeek = firstDay.getDay();
 
   const nowDay = function (day: number) {
-    let result = new Date(today.getFullYear(), today.getMonth(), 1 + day);
+    let result = new Date(firstDay.getFullYear(), firstDay.getMonth(), 1 + day);
     return result;
   };
 
   const createDateString = function (date: Date) {
-    let month = date.getMonth() + 1;
+    let month = '';
+    if (date.getMonth() + 1 > 9) {
+      month = '' + (date.getMonth() + 1);
+    } else {
+      month = '0' + (date.getMonth() + 1);
+    }
+
     let day = '';
     if (date.getDate() > 9) {
       day = '' + date.getDate();
@@ -95,32 +120,37 @@ export default function CalendarTable() {
   const createCalendarCell = function (row: number) {
     let result: Array<any> = [];
     for (let i = 0; i < 7; i++) {
-      if (i === firstDayWeek && row === 0) {
-        result.push(
-          <TableCell key={'cell' + row + i}>
-            <DateString key={'date' + row + i}>
-              {createDateString(firstDay)}
-            </DateString>
-            <ScheduleBar key={'bar' + row + i}></ScheduleBar>
-          </TableCell>,
-        );
-      } else {
-        result.push(
-          <TableCell key={'cell' + row + i}>
-            <DateString key={'date' + row + i}>
-              {createDateString(nowDay(i - firstDayWeek + row * 7))}
-            </DateString>
-            <ScheduleBar key={'bar' + row + i}></ScheduleBar>
-          </TableCell>,
-        );
+      const thisDay = nowDay(i - firstDayWeek + row * 7);
+      const thisYearMonth = createDateString(thisDay);
+      const thisMonth = Number(thisYearMonth.split('-')[0]);
+      const todayNoTime = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+      );
+
+      let getClassName = '';
+      if (thisDay.getTime() === todayNoTime.getTime()) {
+        getClassName = 'todayOfCalendar';
+      } else if (thisMonth !== inputMonth) {
+        getClassName = 'notThisMonth';
       }
+
+      result.push(
+        <TableCell key={'cell' + row + i}>
+          <DateString key={'date' + row + i} className={getClassName}>
+            {thisYearMonth}
+          </DateString>
+          <ScheduleBar key={'bar' + row + i}></ScheduleBar>
+        </TableCell>,
+      );
     }
     return result;
   };
 
   const createCalendarBody = function () {
     let result: Array<any> = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
       result.push(
         <TableBodyRow key={'row' + i}>{createCalendarCell(i)}</TableBodyRow>,
       );

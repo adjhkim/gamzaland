@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
+import CalendarTable from 'app/components/components-calendar/CalendarTable';
 
 const Box = styled.div`
   display: flex;
@@ -37,27 +39,47 @@ const Rect = styled.div`
 `;
 
 export default function CalendarPage() {
-  const nowYearMonth = function () {
-    const today = new Date();
-    const now = today.getFullYear() + '-' + (today.getMonth() + 1);
-    return now;
+  const today = new Date();
+  const nowYearMonth = today.getFullYear() + '-' + (today.getMonth() + 1);
+  const [yearMonth, setYearMonth] = useState(nowYearMonth);
+  const year = Number(yearMonth.split('-')[0]);
+  const month = Number(yearMonth.split('-')[1]);
+
+  const addMonth = function (add: number) {
+    const convertedMonth = month + add;
+    if (convertedMonth === 13) {
+      setYearMonth(year + 1 + '-01');
+    } else if (convertedMonth === 0) {
+      setYearMonth(year - 1 + '-12');
+    } else if (convertedMonth < 10) {
+      setYearMonth(year + '-0' + convertedMonth);
+    } else {
+      setYearMonth(year + '-' + convertedMonth);
+    }
   };
 
   return (
-    <Box>
-      <Rect>
-        <img
-          alt=""
-          src={`${process.env.PUBLIC_URL}/public_assets/before.svg`}
-        ></img>
-      </Rect>
-      <SelectMonth type="month" defaultValue={nowYearMonth()}></SelectMonth>
-      <Rect>
-        <img
-          alt=""
-          src={`${process.env.PUBLIC_URL}/public_assets/next.svg`}
-        ></img>
-      </Rect>
-    </Box>
+    <>
+      <Box>
+        <Rect onClick={() => addMonth(-1)}>
+          <img
+            alt=""
+            src={`${process.env.PUBLIC_URL}/public_assets/before.svg`}
+          ></img>
+        </Rect>
+        <SelectMonth type="month" value={yearMonth} readOnly></SelectMonth>
+        <Rect onClick={() => addMonth(1)}>
+          <img
+            alt=""
+            src={`${process.env.PUBLIC_URL}/public_assets/next.svg`}
+          ></img>
+        </Rect>
+      </Box>
+      <CalendarTable
+        inputYear={year}
+        inputMonth={month}
+        today={today}
+      ></CalendarTable>
+    </>
   );
 }
