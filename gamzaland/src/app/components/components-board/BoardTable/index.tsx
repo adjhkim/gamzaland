@@ -47,8 +47,8 @@ export default function BoardTable() {
 
   async function getBoardData() {
     try {
-      const res = await axios.get('/BoardData', {});
-      setBoardData(res.data);
+      const res = await axios.get(`http://3.39.183.207:4000/BoardData`, {});
+      setBoardData(res.data[0].category);
     } catch (err) {
       console.log(err);
     }
