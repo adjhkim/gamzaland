@@ -16,6 +16,13 @@ const Box = styled.div`
 `;
 
 const SelectMonth = styled.input`
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+
   text-align: center;
   width: 70%;
   height: 100%;

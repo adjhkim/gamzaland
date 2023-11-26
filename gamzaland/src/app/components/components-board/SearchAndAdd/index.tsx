@@ -33,6 +33,13 @@ const SearchTitle = styled.div`
 `;
 
 const SearchType = styled.select`
+  appearance: auto;
+  -moz-appearance: auto;
+  -webkit-appearance: auto;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+
   width: 25%;
   height: 100%;
   border: 0;
@@ -42,6 +49,13 @@ const SearchType = styled.select`
 `;
 
 const SearchText = styled.input`
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+
   width: 40%;
   height: 100%;
   border: 0;
@@ -86,7 +100,7 @@ export default function SearchAndAdd() {
           <option>내용</option>
           <option>작성자</option>
         </SearchType>
-        <SearchText spellCheck="false"></SearchText>
+        <SearchText spellCheck="false" placeholder="검색어 입력"></SearchText>
         <SearchButton>
           <img
             alt=""

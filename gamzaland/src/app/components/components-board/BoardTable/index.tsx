@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 
 const Box = styled.table`
@@ -41,76 +43,43 @@ const TableTitle = styled.td`
 `;
 
 export default function BoardTable() {
+  const [boardData, setBoardData] = useState('');
+
+  async function getBoardData() {
+    try {
+      const res = await axios.get('/BoardData', {});
+      setBoardData(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getBoardData();
+  }, []);
+
+  const createBoardBody = function () {
+    let result: Array<JSX.Element> = [];
+    for (let i = 0; i < 15; i++) {
+      result.push(
+        <TableRow key={'board' + i}>
+          <TableCategory key={'category' + i}>???</TableCategory>
+          <TableTitle key={'title' + i}>???</TableTitle>
+        </TableRow>,
+      );
+    }
+    return result;
+  };
+
   return (
     <Box>
       <thead>
         <TableHead>
-          <TableCategory>분류</TableCategory>
-          <TableTitle>글 제목</TableTitle>
+          <TableCategory>{boardData}</TableCategory>
+          <TableTitle>ddd</TableTitle>
         </TableHead>
       </thead>
-      <tbody>
-        <TableRow>
-          <TableCategory>공지</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>일반</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>일반</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>일반</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>일반</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>공지</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>일반</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>일반</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>일반</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>일반</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>공지</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>일반</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>일반</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>일반</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-        <TableRow>
-          <TableCategory>일반</TableCategory>
-          <TableTitle>제목입니다.</TableTitle>
-        </TableRow>
-      </tbody>
+      <tbody>{createBoardBody()}</tbody>
     </Box>
   );
 }

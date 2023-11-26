@@ -2,7 +2,6 @@ import { Header } from 'app/components/components-common/Header';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
-import './style.css';
 
 const Background = styled.div`
   display: flex;
@@ -49,6 +48,10 @@ export function HomePage({ content }: { content: JSX.Element }) {
       <Helmet>
         <title>GamzaLand</title>
         <meta name="description" content="gamzaland" />
+        <style>
+          @import
+          url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        </style>
       </Helmet>
       <Background>
         <Container>

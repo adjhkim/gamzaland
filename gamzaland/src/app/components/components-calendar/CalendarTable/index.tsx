@@ -85,7 +85,7 @@ export default function CalendarTable({
 }) {
   const weekName = ['일', '월', '화', '수', '목', '금', '토'];
   const createCalendarHead = function () {
-    let result: Array<any> = [];
+    let result: Array<JSX.Element> = [];
     for (let i = 0; i < 7; i++) {
       result.push(<TableCell key={'week' + i}>{weekName[i]}</TableCell>);
     }
@@ -118,7 +118,7 @@ export default function CalendarTable({
   };
 
   const createCalendarCell = function (row: number) {
-    let result: Array<any> = [];
+    let result: Array<JSX.Element> = [];
     for (let i = 0; i < 7; i++) {
       const thisDay = nowDay(i - firstDayWeek + row * 7);
       const thisYearMonth = createDateString(thisDay);
@@ -149,7 +149,7 @@ export default function CalendarTable({
   };
 
   const createCalendarBody = function () {
-    let result: Array<any> = [];
+    let result: Array<JSX.Element> = [];
     for (let i = 0; i < 6; i++) {
       result.push(
         <TableBodyRow key={'row' + i}>{createCalendarCell(i)}</TableBodyRow>,
