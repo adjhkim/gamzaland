@@ -31,10 +31,11 @@ const Container = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 92.5%;
+  padding-bottom: 5%;
   background-color: #f6e3ce;
   overflow: auto;
   ::-webkit-scrollbar {

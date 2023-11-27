@@ -9,7 +9,7 @@ const Box = styled.div`
   align-items: center;
   font-weight: bold;
   width: 90%;
-  height: 4%;
+  margin-top: 5%;
   text-shadow: none;
   color: #000;
   user-select: none;
@@ -43,6 +43,10 @@ const Rect = styled.div`
   width: 10%;
   height: 100%;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+
+  :active {
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25) inset;
+  }
 `;
 
 export default function CalendarPage() {

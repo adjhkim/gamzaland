@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Box = styled.table`
   width: 90%;
-  height: 46%;
+  margin-top: 5%;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   border-radius: 4px;
@@ -19,6 +19,7 @@ const TableHeadRow = styled.tr`
   & > td {
     background-color: #faac58;
     font-weight: bold;
+    padding: 2%;
   }
 
   & > td:nth-child(1) {
@@ -35,6 +36,11 @@ const TableBodyRow = styled.tr`
     background-color: #fff;
     border-bottom: 1px solid #eee;
     color: #000;
+    padding: 3% 2%;
+
+    :active {
+      background-color: #eee;
+    }
   }
 
   & > td:nth-child(1) div:not(.notThisMonth) {
@@ -47,17 +53,12 @@ const TableBodyRow = styled.tr`
 `;
 
 const TableCell = styled.td`
-  padding: 2%;
-
   & > .notThisMonth {
     color: #eee;
   }
 
   & > .todayOfCalendar {
-    font-weight: bold;
-    background-color: #eee;
-    border-radius: 100px;
-    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+    font-weight: 1000;
   }
 `;
 
@@ -67,11 +68,12 @@ const DateString = styled.div`
 `;
 
 const ScheduleBar = styled.div`
-  width: 100%;
-  height: 15%;
-  margin-top: 10%;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25) inset;
+  width: 60%;
+  height: 0.5rem;
+  margin: 5% auto 0 auto;
+  background-color: #a9d0f5;
   border-radius: 100px;
+  /* visibility: hidden; */
 `;
 
 export default function CalendarTable({
@@ -130,10 +132,10 @@ export default function CalendarTable({
       );
 
       let getClassName = '';
-      if (thisDay.getTime() === todayNoTime.getTime()) {
-        getClassName = 'todayOfCalendar';
-      } else if (thisMonth !== inputMonth) {
+      if (thisMonth !== inputMonth) {
         getClassName = 'notThisMonth';
+      } else if (thisDay.getTime() === todayNoTime.getTime()) {
+        getClassName = 'todayOfCalendar';
       }
 
       result.push(

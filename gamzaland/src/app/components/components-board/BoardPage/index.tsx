@@ -7,10 +7,15 @@ const Box = styled.div`
   align-items: center;
   font-weight: bold;
   width: 90%;
-  height: 4%;
+  margin-top: 5%;
   text-shadow: none;
   color: #000;
   user-select: none;
+
+  & > .active {
+    font-weight: 1000;
+    text-decoration: underline;
+  }
 `;
 
 const Rect = styled.div`
@@ -22,6 +27,14 @@ const Rect = styled.div`
   width: 10%;
   height: 100%;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+
+  :active {
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25) inset;
+  }
+`;
+
+const PageNo = styled.div`
+  font-weight: 400;
 `;
 
 export default function BoardPage() {
@@ -33,11 +46,7 @@ export default function BoardPage() {
           src={`${process.env.PUBLIC_URL}/public_assets/before.svg`}
         ></img>
       </Rect>
-      <span>1</span>
-      <span>2</span>
-      <span>3</span>
-      <span>4</span>
-      <span>5</span>
+      <PageNo className="active">1</PageNo>
       <Rect>
         <img
           alt=""

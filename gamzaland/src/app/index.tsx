@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next';
 export function App() {
   const { i18n } = useTranslation();
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Helmet
         titleTemplate="GamzaLand"
         defaultTitle="GamzaLand"

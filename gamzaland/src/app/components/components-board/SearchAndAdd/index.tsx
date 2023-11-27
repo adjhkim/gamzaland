@@ -1,12 +1,14 @@
 import * as React from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
+import BoardTable from 'app/components/components-board/BoardTable';
 
 const Box = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 90%;
-  height: 4%;
+  margin-top: 5%;
 `;
 
 const SearchBox = styled.div`
@@ -74,6 +76,10 @@ const SearchButton = styled.div`
   padding: 2%;
   background-color: #fff;
   user-select: none;
+
+  :active {
+    background-color: #eee;
+  }
 `;
 
 const AddButton = styled.div`
@@ -88,27 +94,49 @@ const AddButton = styled.div`
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
   user-select: none;
+
+  :active {
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25) inset;
+  }
 `;
 
 export default function SearchAndAdd() {
+  const [type, setType] = useState('제목');
+  const [text, setText] = useState('');
+  const [search, setSearch] = useState({
+    searchType: '',
+    searchText: '',
+  });
+
+  const searchBoard = function (inpuType: string, inputText: string) {
+    setSearch({ searchType: inpuType, searchText: inputText });
+  };
+
   return (
-    <Box>
-      <SearchBox>
-        <SearchTitle>검색</SearchTitle>
-        <SearchType>
-          <option>제목</option>
-          <option>내용</option>
-          <option>작성자</option>
-        </SearchType>
-        <SearchText spellCheck="false" placeholder="검색어 입력"></SearchText>
-        <SearchButton>
-          <img
-            alt=""
-            src={`${process.env.PUBLIC_URL}/public_assets/search.svg`}
-          ></img>
-        </SearchButton>
-      </SearchBox>
-      <AddButton>추가</AddButton>
-    </Box>
+    <>
+      <Box>
+        <SearchBox>
+          <SearchTitle>검색</SearchTitle>
+          <SearchType onChange={event => setType(event.target.value)}>
+            <option>제목</option>
+            <option>내용</option>
+            <option>작성자</option>
+          </SearchType>
+          <SearchText
+            onChange={event => setText(event.target.value)}
+            spellCheck="false"
+            placeholder="검색어 입력"
+          ></SearchText>
+          <SearchButton onClick={() => searchBoard(type, text)}>
+            <img
+              alt=""
+              src={`${process.env.PUBLIC_URL}/public_assets/search.svg`}
+            ></img>
+          </SearchButton>
+        </SearchBox>
+        <AddButton>추가</AddButton>
+      </Box>
+      <BoardTable search={search}></BoardTable>
+    </>
   );
 }

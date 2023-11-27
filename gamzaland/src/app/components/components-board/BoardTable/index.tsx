@@ -5,10 +5,10 @@ import styled from 'styled-components';
 
 const Box = styled.table`
   width: 90%;
-  height: 82%;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   border-radius: 4px;
+  margin-top: 5%;
 `;
 
 const TableHead = styled.tr`
@@ -29,6 +29,12 @@ const TableRow = styled.tr`
     color: #000;
     text-shadow: none;
   }
+
+  :active {
+    & > td {
+      background-color: #eee;
+    }
+  }
 `;
 
 const TableCategory = styled.td`
@@ -38,17 +44,35 @@ const TableCategory = styled.td`
   user-select: none;
 `;
 
-const TableTitle = styled.td`
+const TableCell = styled.td`
   width: 80%;
 `;
 
-export default function BoardTable() {
-  const [boardData, setBoardData] = useState('');
+const BoardTitle = styled.span`
+  margin-right: 2%;
+  user-select: none;
+`;
+const BoardReply = styled.span`
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #2e64fe;
+  user-select: none;
+`;
+const BoardInfo = styled.div`
+  font-size: 0.75rem;
+  color: #b4b4b4;
+  user-select: none;
+`;
 
+export default function BoardTable({ search }: { search: object }) {
+  // const searchType = Object.values(search)[0];
+  // const searchText = Object.values(search)[1];
+
+  const [boardData, setBoardData] = useState('');
   async function getBoardData() {
     try {
       const res = await axios.get(`http://3.39.183.207:4000/BoardData`, {});
-      setBoardData(res.data[0].category);
+      setBoardData(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -58,13 +82,63 @@ export default function BoardTable() {
     getBoardData();
   }, []);
 
-  const createBoardBody = function () {
+  const setFormat = function (inputNum: number) {
+    let result = '';
+    if (inputNum < 10) {
+      result = '0' + inputNum;
+    } else {
+      result = '' + inputNum;
+    }
+    return result;
+  };
+
+  const createTimeString = function (inputDate: Date) {
+    let year = inputDate.getFullYear();
+    let month = inputDate.getMonth() + 1;
+    let day = inputDate.getDate();
+    let hour = inputDate.getHours();
+    let min = inputDate.getMinutes();
+    let sec = inputDate.getSeconds();
+
+    return (
+      year +
+      '-' +
+      setFormat(month) +
+      '-' +
+      setFormat(day) +
+      ' ' +
+      setFormat(hour) +
+      ':' +
+      setFormat(min) +
+      ':' +
+      setFormat(sec)
+    );
+  };
+
+  const createBoardBody = function (inputData: any) {
     let result: Array<JSX.Element> = [];
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < inputData.length; i++) {
       result.push(
         <TableRow key={'board' + i}>
-          <TableCategory key={'category' + i}>???</TableCategory>
-          <TableTitle key={'title' + i}>???</TableTitle>
+          <TableCategory key={'category' + i}>
+            {inputData[i].category}
+          </TableCategory>
+          <TableCell key={'title' + i}>
+            <BoardTitle>{inputData[i].title}</BoardTitle>
+            <BoardReply>
+              {'['}
+              {inputData[i].reply}
+              {']'}
+            </BoardReply>
+            <BoardInfo>
+              {inputData[i].wrtName}
+              {' / '}
+              {createTimeString(new Date(inputData[i].rnwDate))}
+              {' / '}
+              {'조회 '}
+              {inputData[i].view}
+            </BoardInfo>
+          </TableCell>
         </TableRow>,
       );
     }
@@ -75,11 +149,11 @@ export default function BoardTable() {
     <Box>
       <thead>
         <TableHead>
-          <TableCategory>{boardData}</TableCategory>
-          <TableTitle>ddd</TableTitle>
+          <TableCategory>분류</TableCategory>
+          <TableCell>제목</TableCell>
         </TableHead>
       </thead>
-      <tbody>{createBoardBody()}</tbody>
+      <tbody>{createBoardBody(boardData)}</tbody>
     </Box>
   );
 }

@@ -5,7 +5,7 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   width: 90%;
-  height: 45%;
+  margin-top: 5%;
 `;
 
 const BoxTitle = styled.div`
