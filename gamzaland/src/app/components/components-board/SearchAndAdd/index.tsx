@@ -163,9 +163,9 @@ export default function SearchAndAdd() {
         <SearchBox>
           <SearchTitle>검색</SearchTitle>
           <SearchType onChange={event => setType(event.target.value)}>
-            <option id="Title">제목</option>
-            <option id="Content">내용</option>
-            <option id="WrtName">작성자</option>
+            <option>제목</option>
+            <option>내용</option>
+            <option>작성자</option>
           </SearchType>
           <SearchText
             onChange={event => setText(event.target.value)}
