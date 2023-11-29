@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
 
 const Box = styled.table`
@@ -64,24 +62,7 @@ const BoardInfo = styled.div`
   user-select: none;
 `;
 
-export default function BoardTable({ search }: { search: object }) {
-  // const searchType = Object.values(search)[0];
-  // const searchText = Object.values(search)[1];
-
-  const [boardData, setBoardData] = useState('');
-  async function getBoardData() {
-    try {
-      const res = await axios.get(`http://3.39.183.207:4000/BoardData`, {});
-      setBoardData(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  useEffect(() => {
-    getBoardData();
-  }, []);
-
+export default function BoardTable({ data }) {
   const setFormat = function (inputNum: number) {
     let result = '';
     if (inputNum < 10) {
@@ -153,7 +134,7 @@ export default function BoardTable({ search }: { search: object }) {
           <TableCell>제목</TableCell>
         </TableHead>
       </thead>
-      <tbody>{createBoardBody(boardData)}</tbody>
+      <tbody>{createBoardBody(data)}</tbody>
     </Box>
   );
 }

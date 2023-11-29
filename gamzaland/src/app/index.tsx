@@ -9,9 +9,7 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
 import { GlobalStyle } from 'styles/global-styles';
-
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
 import { Main } from './pages/Main/Loadable';
 import { Board } from './pages/Board/Loadable';
@@ -22,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 export function App() {
   const { i18n } = useTranslation();
   return (
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <BrowserRouter>
       <Helmet
         titleTemplate="GamzaLand"
         defaultTitle="GamzaLand"

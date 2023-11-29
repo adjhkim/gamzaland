@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import BoardTable from 'app/components/components-board/BoardTable';
 
+//페이지 상단 UI Wrapper (검색+추가)
 const Box = styled.div`
   display: flex;
   justify-content: space-between;
@@ -10,7 +12,9 @@ const Box = styled.div`
   width: 90%;
   margin-top: 5%;
 `;
+//--------------------------------------
 
+//게시글 검색 바 Wrapper
 const SearchBox = styled.div`
   display: flex;
   justify-content: flex-start;
@@ -21,7 +25,9 @@ const SearchBox = styled.div`
   border-radius: 4px;
   overflow: hidden;
 `;
+//--------------------------------------
 
+//게시글 검색 바 제목
 const SearchTitle = styled.div`
   display: flex;
   justify-content: center;
@@ -33,7 +39,9 @@ const SearchTitle = styled.div`
   padding: 2%;
   user-select: none;
 `;
+//--------------------------------------
 
+//게시글 검색 타입 선택
 const SearchType = styled.select`
   appearance: auto;
   -moz-appearance: auto;
@@ -49,7 +57,9 @@ const SearchType = styled.select`
   padding: 2%;
   user-select: none;
 `;
+//--------------------------------------
 
+//게시글 검색어 작성란
 const SearchText = styled.input`
   appearance: none;
   -moz-appearance: none;
@@ -66,7 +76,9 @@ const SearchText = styled.input`
   border-left: 1px solid #eee;
   border-right: 1px solid #eee;
 `;
+//--------------------------------------
 
+//게시글 검색 버튼
 const SearchButton = styled.div`
   display: flex;
   justify-content: center;
@@ -81,7 +93,9 @@ const SearchButton = styled.div`
     background-color: #eee;
   }
 `;
+//--------------------------------------
 
+//게시글 추가 버튼
 const AddButton = styled.div`
   display: flex;
   justify-content: center;
@@ -99,18 +113,49 @@ const AddButton = styled.div`
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25) inset;
   }
 `;
+//--------------------------------------
 
 export default function SearchAndAdd() {
+  //board 페이지 첫 렌더링 시 전체 DB 호출
+  const [boardData, setBoardData] = useState('');
+  async function getBoardData() {
+    try {
+      const res = await axios.get('http://3.39.183.207:4000/BoardData', {});
+      setBoardData(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getBoardData();
+  }, []);
+  //--------------------------------------
+
+  //검색 시 type, text를 이용하여 DB 호출
   const [type, setType] = useState('제목');
   const [text, setText] = useState('');
-  const [search, setSearch] = useState({
-    searchType: '',
-    searchText: '',
-  });
-
-  const searchBoard = function (inpuType: string, inputText: string) {
-    setSearch({ searchType: inpuType, searchText: inputText });
-  };
+  async function searchBoardData() {
+    let path = '';
+    if (type === '제목') {
+      path = 'BoardByTitle';
+    } else if (type === '내용') {
+      path = 'BoardByContent';
+    } else if (type === '작성자') {
+      path = 'BoardByWrtName';
+    } else {
+      path = 'BoardData';
+    }
+    try {
+      const res = await axios.get(`http://3.39.183.207:4000/${path}`, {
+        params: { text: text },
+      });
+      setBoardData(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  //--------------------------------------
 
   return (
     <>
@@ -118,16 +163,16 @@ export default function SearchAndAdd() {
         <SearchBox>
           <SearchTitle>검색</SearchTitle>
           <SearchType onChange={event => setType(event.target.value)}>
-            <option>제목</option>
-            <option>내용</option>
-            <option>작성자</option>
+            <option id="Title">제목</option>
+            <option id="Content">내용</option>
+            <option id="WrtName">작성자</option>
           </SearchType>
           <SearchText
             onChange={event => setText(event.target.value)}
             spellCheck="false"
             placeholder="검색어 입력"
           ></SearchText>
-          <SearchButton onClick={() => searchBoard(type, text)}>
+          <SearchButton onClick={() => searchBoardData()}>
             <img
               alt=""
               src={`${process.env.PUBLIC_URL}/public_assets/search.svg`}
@@ -136,7 +181,7 @@ export default function SearchAndAdd() {
         </SearchBox>
         <AddButton>추가</AddButton>
       </Box>
-      <BoardTable search={search}></BoardTable>
+      <BoardTable data={boardData}></BoardTable>
     </>
   );
 }
