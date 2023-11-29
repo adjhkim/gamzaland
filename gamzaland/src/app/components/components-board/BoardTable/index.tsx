@@ -1,5 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { useState } from 'react';
+import { PopUp } from 'app/components/components-common/PopUp';
 
 const Box = styled.table`
   width: 90%;
@@ -96,11 +98,43 @@ export default function BoardTable({ data }) {
     );
   };
 
+  //모달 창 상태 제어
+  const [isOpen, setIsOpen] = useState(false);
+  const [thisData, setThisData] = useState('');
+  const openBoardDetail = function (inputData: any) {
+    return (
+      <>
+        <BoardTitle>{inputData.title}</BoardTitle>
+        <BoardReply>
+          {'['}
+          {inputData.reply}
+          {']'}
+        </BoardReply>
+        <BoardInfo>
+          {inputData.wrtName}
+          {' / '}
+          {createTimeString(new Date(inputData.rnwDate))}
+          {' / '}
+          {'조회 '}
+          {inputData.view}
+        </BoardInfo>
+        {inputData.content}
+      </>
+    );
+  };
+  //--------------------------------------
+
   const createBoardBody = function (inputData: any) {
     let result: Array<JSX.Element> = [];
     for (let i = 0; i < inputData.length; i++) {
       result.push(
-        <TableRow key={'board' + i}>
+        <TableRow
+          key={'board' + i}
+          onClick={() => {
+            setIsOpen(true);
+            setThisData(inputData[i]);
+          }}
+        >
           <TableCategory key={'category' + i}>
             {inputData[i].category}
           </TableCategory>
@@ -127,14 +161,21 @@ export default function BoardTable({ data }) {
   };
 
   return (
-    <Box>
-      <thead>
-        <TableHead>
-          <TableCategory>분류</TableCategory>
-          <TableCell>제목</TableCell>
-        </TableHead>
-      </thead>
-      <tbody>{createBoardBody(data)}</tbody>
-    </Box>
+    <>
+      <Box>
+        <thead>
+          <TableHead>
+            <TableCategory>분류</TableCategory>
+            <TableCell>제목</TableCell>
+          </TableHead>
+        </thead>
+        <tbody>{createBoardBody(data)}</tbody>
+      </Box>
+      <PopUp
+        title={'게시글 상세 내용'}
+        content={openBoardDetail(thisData)}
+        isOpen={isOpen}
+      ></PopUp>
+    </>
   );
 }

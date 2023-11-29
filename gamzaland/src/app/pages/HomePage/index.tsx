@@ -43,7 +43,7 @@ const Content = styled.div`
   }
 `;
 
-export function HomePage({ content }: { content: JSX.Element }) {
+export function HomePage(props: { content: JSX.Element }) {
   return (
     <>
       <Helmet>
@@ -57,7 +57,7 @@ export function HomePage({ content }: { content: JSX.Element }) {
       <Background>
         <Container>
           <Header></Header>
-          <Content>{content}</Content>
+          <Content>{props.content}</Content>
         </Container>
       </Background>
     </>
