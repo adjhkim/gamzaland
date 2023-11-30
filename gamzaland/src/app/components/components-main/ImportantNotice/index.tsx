@@ -36,7 +36,7 @@ const BoxContent = styled.div`
 export default function ImportantNotice() {
   return (
     <Box>
-      <BoxTitle>중요 공지</BoxTitle>
+      <BoxTitle>최근 공지</BoxTitle>
       <BoxContent></BoxContent>
     </Box>
   );

@@ -36,7 +36,7 @@ const BoxContent = styled.div`
 export default function ImportantSchedule() {
   return (
     <Box>
-      <BoxTitle>중요 일정</BoxTitle>
+      <BoxTitle>다가올 일정</BoxTitle>
       <BoxContent></BoxContent>
     </Box>
   );
