@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import { useState } from 'react';
 import { PopUp } from 'app/components/components-common/PopUp';
 
@@ -70,45 +71,83 @@ const BoardInfo = styled.div`
 //--------------------------------------
 
 //Modal 내부 게시글 정보
-const ModalHead = styled.div`
+const ModalInfo = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
+  margin-bottom: 3%;
 `;
 
-const ModalCategory = styled.span`
+const ModalCategory = styled.select`
+  width: 20%;
+  background-color: #f6e3ce;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 0.8rem;
   font-weight: bold;
-  margin-right: 2%;
+  color: #000;
+  outline: 0;
+  border: 0;
+  padding: 1% 2%;
+  appearance: none;
   user-select: none;
+
+  &.editing {
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+    appearance: auto;
+  }
 `;
 
-const ModalTitle = styled.span`
-  font-size: 0.8rem;
-  user-select: none;
-`;
-
-const ModalInfo = styled.div`
+const ModalDetail = styled.span`
   font-size: 0.75rem;
   font-weight: bold;
   color: #848484;
   user-select: none;
 `;
 
+const ModalHead = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid #a4a4a4;
+  padding-bottom: 2%;
+  margin-bottom: 2%;
+`;
+
+const ModalTitle = styled.input`
+  flex: 1;
+  background-color: #f6e3ce;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.8rem;
+  outline: 0;
+  border: 0;
+  padding: 2%;
+  user-select: none;
+
+  &.editing {
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+  }
+`;
+
 const ModalContent = styled.textarea`
   width: 100%;
   flex: 1;
-  background-color: #fff;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+  background-color: #f6e3ce;
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 0.8rem;
-  margin-top: 4%;
-  padding: 2%;
   outline: 0;
   border: 0;
+  padding: 2%;
   user-select: none;
   resize: none;
+
+  &.editing {
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+  }
 `;
 //--------------------------------------
 
@@ -160,6 +199,7 @@ export default function BoardTable({ data }) {
           onClick={() => {
             setIsOpen(true);
             setThisData(inputData[i]);
+            setModalName('게시글 번호 ' + inputData[i].no);
           }}
         >
           <TableCategory key={'category' + i}>
@@ -168,9 +208,9 @@ export default function BoardTable({ data }) {
           <TableCell key={'title' + i}>
             <BoardTitle>{inputData[i].title}</BoardTitle>
             <BoardInfo>
-              {inputData[i].wrtName}
-              {' / '}
-              {createTimeString(new Date(inputData[i].rnwDate))}
+              {inputData[i].wrtName +
+                ' / ' +
+                createTimeString(new Date(inputData[i].rnwDate))}
             </BoardInfo>
           </TableCell>
         </TableRow>,
@@ -181,28 +221,78 @@ export default function BoardTable({ data }) {
   //--------------------------------------
 
   //모달 창 상태 제어
-  const [isOpen, setIsOpen] = useState(false);
+  const [modalName, setModalName] = useState('');
   const [thisData, setThisData] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  let editClass = '';
+  if (isEdit === true) {
+    editClass = 'editing';
+  } else {
+    editClass = '';
+  }
+  //--------------------------------------
+
+  //모달 창 팝업 : 게시글 상세 보기
   const openBoardDetail = function (inputData: any) {
     return (
       <>
-        <ModalHead>
-          <ModalCategory>{'[' + inputData.category + ']'}</ModalCategory>
-          <ModalTitle>{inputData.title}</ModalTitle>
-        </ModalHead>
         <ModalInfo>
-          {inputData.wrtName}
-          {' / '}
-          {createTimeString(new Date(inputData.rnwDate))}
+          <ModalCategory
+            className={editClass}
+            defaultValue={inputData.category}
+            onChange={event => setEditCategory(event.target.value)}
+            disabled={!isEdit}
+          >
+            <option>공지</option>
+            <option>일반</option>
+          </ModalCategory>
+          <ModalDetail>
+            {inputData.wrtName +
+              ' / ' +
+              createTimeString(new Date(inputData.rnwDate))}
+          </ModalDetail>
         </ModalInfo>
+        <ModalHead>
+          <ModalTitle
+            className={editClass}
+            defaultValue={inputData.title}
+            onChange={event => setEditTitle(event.target.value)}
+            readOnly={!isEdit}
+            spellCheck={false}
+          ></ModalTitle>
+        </ModalHead>
         <ModalContent
-          value={inputData.content}
+          className={editClass}
+          defaultValue={inputData.content}
+          onChange={event => setEditContent(event.target.value)}
+          readOnly={!isEdit}
           spellCheck={false}
-          readOnly={true}
         ></ModalContent>
       </>
     );
   };
+  //--------------------------------------
+
+  //게시글 수정 > 저장 시 DB로 전송
+  const [editCategory, setEditCategory] = useState('');
+  const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
+  async function editBoard(boardNo: number) {
+    try {
+      const res = await axios.post(`http://3.39.183.207:4000/EditBoard`, {
+        params: {
+          category: editCategory,
+          title: editTitle,
+          content: editContent,
+          no: boardNo,
+        },
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   //--------------------------------------
 
   return (
@@ -217,10 +307,11 @@ export default function BoardTable({ data }) {
         <tbody>{createBoardBody(data)}</tbody>
       </Box>
       <PopUp
-        title={'게시글 상세 내용'}
+        title={modalName}
         content={openBoardDetail(thisData)}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        setIsEdit={setIsEdit}
       ></PopUp>
     </>
   );

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import BoardTable from 'app/components/components-board/BoardTable';
+import { PopUp } from 'app/components/components-common/PopUp';
 
 //페이지 상단 UI Wrapper (검색+추가)
 const Box = styled.div`
@@ -115,6 +116,80 @@ const AddButton = styled.div`
 `;
 //--------------------------------------
 
+//Modal 내부 게시글 정보
+const ModalInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 3%;
+`;
+
+const ModalCategory = styled.select`
+  width: 20%;
+  background-color: #f6e3ce;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #000;
+  outline: 0;
+  border: 0;
+  padding: 1% 2%;
+  appearance: none;
+  user-select: none;
+
+  &.editing {
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+    appearance: auto;
+  }
+`;
+
+const ModalHead = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid #a4a4a4;
+  padding-bottom: 2%;
+  margin-bottom: 2%;
+`;
+
+const ModalTitle = styled.input`
+  flex: 1;
+  background-color: #f6e3ce;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.8rem;
+  outline: 0;
+  border: 0;
+  padding: 2%;
+  user-select: none;
+
+  &.editing {
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+  }
+`;
+
+const ModalContent = styled.textarea`
+  width: 100%;
+  flex: 1;
+  background-color: #f6e3ce;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.8rem;
+  outline: 0;
+  border: 0;
+  padding: 2%;
+  user-select: none;
+  resize: none;
+
+  &.editing {
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+  }
+`;
+//--------------------------------------
+
 export default function SearchAndAdd() {
   //board 페이지 첫 렌더링 시 전체 DB 호출
   const [boardData, setBoardData] = useState('');
@@ -157,6 +232,65 @@ export default function SearchAndAdd() {
   }
   //--------------------------------------
 
+  //모달 창 상태 제어
+  const [modalName, setModalName] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [isAdd, setIsAdd] = useState(false);
+  let editClass = 'editing';
+  //--------------------------------------
+
+  //모달 창 팝업 : 게시글 추가
+  const openBoardAdd = function () {
+    return (
+      <>
+        <ModalInfo>
+          <ModalCategory
+            className={editClass}
+            onChange={event => setAddCategory(event.target.value)}
+          >
+            <option>일반</option>
+            <option>공지</option>
+          </ModalCategory>
+        </ModalInfo>
+        <ModalHead>
+          <ModalTitle
+            className={editClass}
+            onChange={event => setAddTitle(event.target.value)}
+            spellCheck={false}
+          ></ModalTitle>
+        </ModalHead>
+        <ModalContent
+          className={editClass}
+          onChange={event => setAddContent(event.target.value)}
+          spellCheck={false}
+        ></ModalContent>
+      </>
+    );
+  };
+  //--------------------------------------
+
+  //게시글 추가 > 저장 시 DB로 전송
+  const [addCategory, setAddCategory] = useState('');
+  const [addTitle, setAddTitle] = useState('');
+  const [addContent, setAddContent] = useState('');
+  async function addBoard(wrtId: number, wrtName: string) {
+    try {
+      const res = await axios.post(`http://3.39.183.207:4000/AddBoard`, {
+        params: {
+          category: addCategory,
+          title: addTitle,
+          content: addContent,
+          wrtId: wrtId,
+          wrtName: wrtName,
+        },
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  //--------------------------------------
+
   return (
     <>
       <Box>
@@ -179,9 +313,24 @@ export default function SearchAndAdd() {
             ></img>
           </SearchButton>
         </SearchBox>
-        <AddButton>추가</AddButton>
+        <AddButton
+          onClick={() => {
+            setIsOpen(true);
+            setIsAdd(true);
+            setModalName('게시글 추가');
+          }}
+        >
+          추가
+        </AddButton>
       </Box>
       <BoardTable data={boardData}></BoardTable>
+      <PopUp
+        title={modalName}
+        content={openBoardAdd()}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        isAdd={isAdd}
+      ></PopUp>
     </>
   );
 }

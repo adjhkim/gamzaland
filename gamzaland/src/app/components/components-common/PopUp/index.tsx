@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
 
@@ -18,11 +19,15 @@ const ModalHeader = styled.div`
   user-select: none;
 `;
 
-const ModalButton = styled.div`
-  display: flex;
+const ModalButton = styled.div<{ show?: string }>`
+  display: ${props => props.show || 'flex'};
   justify-content: center;
   align-items: center;
   border-radius: 100%;
+
+  :active {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 `;
 
 const ModalContent = styled.div`
@@ -44,6 +49,7 @@ const ModalContent = styled.div`
 
 const ModalFooter = styled.div`
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
   align-items: center;
   width: 100%;
@@ -63,7 +69,25 @@ export function PopUp(props: {
   content: JSX.Element;
   isOpen: boolean;
   setIsOpen: any;
+  setIsEdit?: any;
+  isAdd?: boolean;
 }) {
+  const [showDelete, setShowDelete] = useState('');
+  const [showEdit, setShowEdit] = useState('');
+  const [showSave, setShowSave] = useState('');
+
+  useEffect(() => {
+    if (props.isAdd) {
+      setShowDelete('none');
+      setShowEdit('none');
+      setShowSave('flex');
+    } else {
+      setShowDelete('flex');
+      setShowEdit('flex');
+      setShowSave('none');
+    }
+  }, [props.isAdd]);
+
   return (
     <>
       <Modal
@@ -85,8 +109,12 @@ export function PopUp(props: {
         <ModalHeader>
           {props.title}
           <ModalButton
+            show="flex"
             onClick={() => {
               props.setIsOpen(false);
+              props.setIsEdit && props.setIsEdit(false);
+              props.setIsEdit && setShowEdit('flex');
+              props.setIsEdit && setShowSave('none');
             }}
           >
             <img
@@ -97,16 +125,29 @@ export function PopUp(props: {
         </ModalHeader>
         <ModalContent>{props.content}</ModalContent>
         <ModalFooter>
-          <ModalButton>
-            <img
-              alt=""
-              src={`${process.env.PUBLIC_URL}/public_assets/delete.svg`}
-            ></img>
-          </ModalButton>
-          <ModalButton>
+          <ModalButton
+            show={showEdit}
+            onClick={() => {
+              props.setIsEdit(true);
+              setShowEdit('none');
+              setShowSave('flex');
+            }}
+          >
             <img
               alt=""
               src={`${process.env.PUBLIC_URL}/public_assets/edit.svg`}
+            ></img>
+          </ModalButton>
+          <ModalButton show={showSave}>
+            <img
+              alt=""
+              src={`${process.env.PUBLIC_URL}/public_assets/save.svg`}
+            ></img>
+          </ModalButton>
+          <ModalButton show={showDelete}>
+            <img
+              alt=""
+              src={`${process.env.PUBLIC_URL}/public_assets/delete.svg`}
             ></img>
           </ModalButton>
         </ModalFooter>
