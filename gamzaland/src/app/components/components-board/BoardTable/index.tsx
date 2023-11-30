@@ -295,6 +295,21 @@ export default function BoardTable({ data }) {
   }
   //--------------------------------------
 
+  //게시글 삭제 시 DB로 전송
+  async function deleteBoard(boardNo: number) {
+    try {
+      const res = await axios.post(`http://3.39.183.207:4000/DeleteBoard`, {
+        params: {
+          no: boardNo,
+        },
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  //--------------------------------------
+
   return (
     <>
       <Box>
