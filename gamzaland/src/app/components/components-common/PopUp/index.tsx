@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
+import axios from 'axios';
 import styled from 'styled-components';
 
 const ModalHeader = styled.div`
@@ -65,13 +66,76 @@ const ModalFooter = styled.div`
 `;
 
 export function PopUp(props: {
+  isUseFunc?: any;
   title: string;
   content: JSX.Element;
   isOpen: boolean;
   setIsOpen: any;
   setIsEdit?: any;
   isAdd?: boolean;
+  addBoard?: { category: string; title: string; content: string };
+  editBoard?: { category: string; title: string; content: string; no: number };
 }) {
+  const wrtId = 0;
+  const wrtName = 'gamza';
+
+  async function addBoard(
+    category: string,
+    title: string,
+    content: string,
+    wrtId: number,
+    wrtName: string,
+  ) {
+    try {
+      const res = await axios.get(`http://localhost:4000/AddBoard`, {
+        params: {
+          category: category,
+          title: title,
+          content: content,
+          wrtId: wrtId,
+          wrtName: wrtName,
+        },
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function editBoard(
+    category: string,
+    title: string,
+    content: string,
+    no: number,
+  ) {
+    try {
+      const res = await axios.get(`http://localhost:4000/EditBoard`, {
+        params: {
+          category: category,
+          title: title,
+          content: content,
+          no: no,
+        },
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function deleteBoard(no: number) {
+    try {
+      const res = await axios.get(`http://localhost:4000/DeleteBoard`, {
+        params: {
+          no: no,
+        },
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   const [showDelete, setShowDelete] = useState('');
   const [showEdit, setShowEdit] = useState('');
   const [showSave, setShowSave] = useState('');
@@ -138,13 +202,47 @@ export function PopUp(props: {
               src={`${process.env.PUBLIC_URL}/public_assets/edit.svg`}
             ></img>
           </ModalButton>
-          <ModalButton show={showSave}>
+          <ModalButton
+            show={showSave}
+            onClick={() => {
+              props.setIsOpen(false);
+              props.isUseFunc(true);
+              props.addBoard &&
+                addBoard(
+                  props.addBoard.category,
+                  props.addBoard.title,
+                  props.addBoard.content,
+                  wrtId,
+                  wrtName,
+                );
+              props.editBoard &&
+                editBoard(
+                  props.editBoard.category,
+                  props.editBoard.title,
+                  props.editBoard.content,
+                  props.editBoard.no,
+                );
+              props.setIsEdit && props.setIsEdit(false);
+              props.setIsEdit && setShowEdit('flex');
+              props.setIsEdit && setShowSave('none');
+            }}
+          >
             <img
               alt=""
               src={`${process.env.PUBLIC_URL}/public_assets/save.svg`}
             ></img>
           </ModalButton>
-          <ModalButton show={showDelete}>
+          <ModalButton
+            show={showDelete}
+            onClick={() => {
+              props.setIsOpen(false);
+              props.isUseFunc(true);
+              props.editBoard && deleteBoard(props.editBoard.no);
+              props.setIsEdit && props.setIsEdit(false);
+              props.setIsEdit && setShowEdit('flex');
+              props.setIsEdit && setShowSave('none');
+            }}
+          >
             <img
               alt=""
               src={`${process.env.PUBLIC_URL}/public_assets/delete.svg`}

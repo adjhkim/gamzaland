@@ -1,6 +1,5 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import { useState } from 'react';
 import { PopUp } from 'app/components/components-common/PopUp';
 
@@ -151,7 +150,7 @@ const ModalContent = styled.textarea`
 `;
 //--------------------------------------
 
-export default function BoardTable({ data }) {
+export default function BoardTable({ data, isUseFunc }) {
   //10보다 낮은 숫자를 0n 포맷으로 변경
   const setFormat = function (inputNum: number) {
     let result = '';
@@ -200,6 +199,15 @@ export default function BoardTable({ data }) {
             setIsOpen(true);
             setThisData(inputData[i]);
             setModalName('게시글 번호 ' + inputData[i].no);
+            setEditValue(prevState => {
+              return {
+                ...prevState,
+                category: inputData[i].category,
+                title: inputData[i].title,
+                content: inputData[i].content,
+                no: inputData[i].no,
+              };
+            });
           }}
         >
           <TableCategory key={'category' + i}>
@@ -241,7 +249,11 @@ export default function BoardTable({ data }) {
           <ModalCategory
             className={editClass}
             defaultValue={inputData.category}
-            onChange={event => setEditCategory(event.target.value)}
+            onChange={event =>
+              setEditValue(prevState => {
+                return { ...prevState, category: event.target.value };
+              })
+            }
             disabled={!isEdit}
           >
             <option>공지</option>
@@ -257,7 +269,11 @@ export default function BoardTable({ data }) {
           <ModalTitle
             className={editClass}
             defaultValue={inputData.title}
-            onChange={event => setEditTitle(event.target.value)}
+            onChange={event =>
+              setEditValue(prevState => {
+                return { ...prevState, title: event.target.value };
+              })
+            }
             readOnly={!isEdit}
             spellCheck={false}
           ></ModalTitle>
@@ -265,7 +281,11 @@ export default function BoardTable({ data }) {
         <ModalContent
           className={editClass}
           defaultValue={inputData.content}
-          onChange={event => setEditContent(event.target.value)}
+          onChange={event =>
+            setEditValue(prevState => {
+              return { ...prevState, content: event.target.value };
+            })
+          }
           readOnly={!isEdit}
           spellCheck={false}
         ></ModalContent>
@@ -274,40 +294,13 @@ export default function BoardTable({ data }) {
   };
   //--------------------------------------
 
-  //게시글 수정 > 저장 시 DB로 전송
-  const [editCategory, setEditCategory] = useState('');
-  const [editTitle, setEditTitle] = useState('');
-  const [editContent, setEditContent] = useState('');
-  async function editBoard(boardNo: number) {
-    try {
-      const res = await axios.post(`http://3.39.183.207:4000/EditBoard`, {
-        params: {
-          category: editCategory,
-          title: editTitle,
-          content: editContent,
-          no: boardNo,
-        },
-      });
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  //--------------------------------------
-
-  //게시글 삭제 시 DB로 전송
-  async function deleteBoard(boardNo: number) {
-    try {
-      const res = await axios.post(`http://3.39.183.207:4000/DeleteBoard`, {
-        params: {
-          no: boardNo,
-        },
-      });
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  //게시글 수정 시 입력한 데이터 저장
+  const [editValue, setEditValue] = useState({
+    category: '일반',
+    title: '',
+    content: '',
+    no: 0,
+  });
   //--------------------------------------
 
   return (
@@ -322,11 +315,13 @@ export default function BoardTable({ data }) {
         <tbody>{createBoardBody(data)}</tbody>
       </Box>
       <PopUp
+        isUseFunc={isUseFunc}
         title={modalName}
         content={openBoardDetail(thisData)}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         setIsEdit={setIsEdit}
+        editBoard={editValue}
       ></PopUp>
     </>
   );

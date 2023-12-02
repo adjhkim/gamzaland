@@ -191,11 +191,12 @@ const ModalContent = styled.textarea`
 //--------------------------------------
 
 export default function SearchAndAdd() {
-  //board 페이지 첫 렌더링 시 전체 DB 호출
+  //board 페이지 첫 렌더링 or 기능 사용 시 전체 DB 호출
   const [boardData, setBoardData] = useState('');
+  const [isUseFunc, setIsUseFunc] = useState(false);
   async function getBoardData() {
     try {
-      const res = await axios.get('http://3.39.183.207:4000/BoardData', {});
+      const res = await axios.get('http://localhost:4000/BoardData', {});
       setBoardData(res.data);
     } catch (err) {
       console.log(err);
@@ -203,8 +204,13 @@ export default function SearchAndAdd() {
   }
 
   useEffect(() => {
-    getBoardData();
-  }, []);
+    if (isUseFunc === false) {
+      getBoardData();
+    } else {
+      getBoardData();
+      setIsUseFunc(false);
+    }
+  }, [isUseFunc]);
   //--------------------------------------
 
   //검색 시 type, text를 이용하여 DB 호출
@@ -222,7 +228,7 @@ export default function SearchAndAdd() {
       path = 'BoardData';
     }
     try {
-      const res = await axios.get(`http://3.39.183.207:4000/${path}`, {
+      const res = await axios.get(`http://localhost:4000/${path}`, {
         params: { text: text },
       });
       setBoardData(res.data);
@@ -246,7 +252,11 @@ export default function SearchAndAdd() {
         <ModalInfo>
           <ModalCategory
             className={editClass}
-            onChange={event => setAddCategory(event.target.value)}
+            onChange={event =>
+              setAddValue(prevState => {
+                return { ...prevState, category: event.target.value };
+              })
+            }
           >
             <option>일반</option>
             <option>공지</option>
@@ -255,13 +265,21 @@ export default function SearchAndAdd() {
         <ModalHead>
           <ModalTitle
             className={editClass}
-            onChange={event => setAddTitle(event.target.value)}
+            onChange={event =>
+              setAddValue(prevState => {
+                return { ...prevState, title: event.target.value };
+              })
+            }
             spellCheck={false}
           ></ModalTitle>
         </ModalHead>
         <ModalContent
           className={editClass}
-          onChange={event => setAddContent(event.target.value)}
+          onChange={event =>
+            setAddValue(prevState => {
+              return { ...prevState, content: event.target.value };
+            })
+          }
           spellCheck={false}
         ></ModalContent>
       </>
@@ -269,26 +287,12 @@ export default function SearchAndAdd() {
   };
   //--------------------------------------
 
-  //게시글 추가 > 저장 시 DB로 전송
-  const [addCategory, setAddCategory] = useState('');
-  const [addTitle, setAddTitle] = useState('');
-  const [addContent, setAddContent] = useState('');
-  async function addBoard(wrtId: number, wrtName: string) {
-    try {
-      const res = await axios.post(`http://3.39.183.207:4000/AddBoard`, {
-        params: {
-          category: addCategory,
-          title: addTitle,
-          content: addContent,
-          wrtId: wrtId,
-          wrtName: wrtName,
-        },
-      });
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  //게시글 추가 시 입력한 데이터 저장
+  const [addValue, setAddValue] = useState({
+    category: '일반',
+    title: '',
+    content: '',
+  });
   //--------------------------------------
 
   return (
@@ -323,13 +327,15 @@ export default function SearchAndAdd() {
           추가
         </AddButton>
       </Box>
-      <BoardTable data={boardData}></BoardTable>
+      <BoardTable data={boardData} isUseFunc={setIsUseFunc}></BoardTable>
       <PopUp
+        isUseFunc={setIsUseFunc}
         title={modalName}
         content={openBoardAdd()}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         isAdd={isAdd}
+        addBoard={addValue}
       ></PopUp>
     </>
   );
