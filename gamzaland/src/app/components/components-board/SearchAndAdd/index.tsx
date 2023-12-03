@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import BoardTable from 'app/components/components-board/BoardTable';
+import BoardPage from 'app/components/components-board/BoardPage';
 import { PopUp } from 'app/components/components-common/PopUp';
 
 //페이지 상단 UI Wrapper (검색+추가)
@@ -192,11 +193,42 @@ const ModalContent = styled.textarea`
 
 export default function SearchAndAdd() {
   //board 페이지 첫 렌더링 or 기능 사용 시 전체 DB 호출
+  const [noticeData, setNoticeData] = useState('');
   const [boardData, setBoardData] = useState('');
+  const [boardCount, setBoardCount] = useState(0);
+  const [boardPage, setBoardPage] = useState(1);
   const [isUseFunc, setIsUseFunc] = useState(false);
-  async function getBoardData() {
+  async function getLastNotice() {
     try {
-      const res = await axios.get('http://localhost:4000/BoardData', {});
+      const res = await axios.get('http://localhost:4000/LastNotice', {});
+      setNoticeData(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function getBoardCount() {
+    try {
+      const res = await axios.get('http://localhost:4000/BoardCount', {});
+      const divideShare = Math.floor(res.data[0].count / 10);
+      const divideRemainder = res.data[0].count % 10;
+      if (divideRemainder === 0) {
+        setBoardCount(divideShare);
+      } else {
+        setBoardCount(divideShare + 1);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function getBoardData(pageNo: number) {
+    try {
+      const res = await axios.get('http://localhost:4000/BoardData', {
+        params: {
+          pageNo: pageNo,
+        },
+      });
       setBoardData(res.data);
     } catch (err) {
       console.log(err);
@@ -205,18 +237,49 @@ export default function SearchAndAdd() {
 
   useEffect(() => {
     if (isUseFunc === false) {
-      getBoardData();
+      getLastNotice();
+      getBoardCount();
+      getBoardData(boardPage);
     } else {
-      getBoardData();
+      getLastNotice();
+      getBoardCount();
+      getBoardData(boardPage);
       setIsUseFunc(false);
     }
-  }, [isUseFunc]);
+  }, [isUseFunc, boardPage]);
   //--------------------------------------
 
   //검색 시 type, text를 이용하여 DB 호출
   const [type, setType] = useState('제목');
   const [text, setText] = useState('');
-  async function searchBoardData() {
+  async function searchBoardCount() {
+    let path = '';
+    if (type === '제목') {
+      path = 'BoardCountByTitle';
+    } else if (type === '내용') {
+      path = 'BoardCountByContent';
+    } else if (type === '작성자') {
+      path = 'BoardCountByWrtName';
+    } else {
+      path = 'BoardData';
+    }
+    try {
+      const res = await axios.get(`http://localhost:4000/${path}`, {
+        params: { text: text },
+      });
+      const divideShare = Math.floor(res.data[0].count / 10);
+      const divideRemainder = res.data[0].count % 10;
+      if (divideRemainder === 0) {
+        setBoardCount(divideShare);
+      } else {
+        setBoardCount(divideShare + 1);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function searchBoardData(pageNo: number) {
     let path = '';
     if (type === '제목') {
       path = 'BoardByTitle';
@@ -229,7 +292,7 @@ export default function SearchAndAdd() {
     }
     try {
       const res = await axios.get(`http://localhost:4000/${path}`, {
-        params: { text: text },
+        params: { pageNo: pageNo, text: text },
       });
       setBoardData(res.data);
     } catch (err) {
@@ -310,7 +373,12 @@ export default function SearchAndAdd() {
             spellCheck="false"
             placeholder="검색어 입력"
           ></SearchText>
-          <SearchButton onClick={() => searchBoardData()}>
+          <SearchButton
+            onClick={() => {
+              searchBoardData(boardPage);
+              searchBoardCount();
+            }}
+          >
             <img
               alt=""
               src={`${process.env.PUBLIC_URL}/public_assets/search.svg`}
@@ -327,7 +395,16 @@ export default function SearchAndAdd() {
           추가
         </AddButton>
       </Box>
-      <BoardTable data={boardData} isUseFunc={setIsUseFunc}></BoardTable>
+      <BoardTable
+        notice={noticeData}
+        data={boardData}
+        isUseFunc={setIsUseFunc}
+      ></BoardTable>
+      <BoardPage
+        count={boardCount}
+        page={boardPage}
+        setPage={setBoardPage}
+      ></BoardPage>
       <PopUp
         isUseFunc={setIsUseFunc}
         title={modalName}

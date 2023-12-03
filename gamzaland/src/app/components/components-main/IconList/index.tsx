@@ -29,7 +29,7 @@ const BoxContent = styled.div`
   width: 100%;
   flex: 1;
   background-color: #fff;
-  padding: 5%;
+  padding: 8% 0;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
   border-radius: 0 4px 4px 4px;
   user-select: none;

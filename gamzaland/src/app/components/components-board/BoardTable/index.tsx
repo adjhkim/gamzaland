@@ -35,6 +35,10 @@ const TableRow = styled.tr`
     text-shadow: none;
   }
 
+  &.notice > td {
+    background-color: #f7f2e0;
+  }
+
   :active {
     & > td {
       background-color: #eee;
@@ -150,7 +154,7 @@ const ModalContent = styled.textarea`
 `;
 //--------------------------------------
 
-export default function BoardTable({ data, isUseFunc }) {
+export default function BoardTable({ notice, data, isUseFunc }) {
   //10보다 낮은 숫자를 0n 포맷으로 변경
   const setFormat = function (inputNum: number) {
     let result = '';
@@ -187,6 +191,46 @@ export default function BoardTable({ data, isUseFunc }) {
     );
   };
   //--------------------------------------
+
+  //가장 최근 공지 테이블 Body 생성
+  const createLastNotice = function (inputData: any) {
+    let result: Array<JSX.Element> = [];
+    for (let i = 0; i < inputData.length; i++) {
+      result.push(
+        <TableRow
+          className="notice"
+          key={'noticeBoard' + i}
+          onClick={() => {
+            setIsOpen(true);
+            setThisData(inputData[i]);
+            setModalName('게시글 번호 ' + inputData[i].no);
+            setEditValue(prevState => {
+              return {
+                ...prevState,
+                category: inputData[i].category,
+                title: inputData[i].title,
+                content: inputData[i].content,
+                no: inputData[i].no,
+              };
+            });
+          }}
+        >
+          <TableCategory key={'noticeCategory' + i}>
+            {inputData[i].category}
+          </TableCategory>
+          <TableCell key={'noticeTitle' + i}>
+            <BoardTitle>{inputData[i].title}</BoardTitle>
+            <BoardInfo>
+              {inputData[i].wrtName +
+                ' / ' +
+                createTimeString(new Date(inputData[i].rnwDate))}
+            </BoardInfo>
+          </TableCell>
+        </TableRow>,
+      );
+    }
+    return result;
+  };
 
   //전달받은 DB로 게시글 테이블 Body 생성
   const createBoardBody = function (inputData: any) {
@@ -312,7 +356,10 @@ export default function BoardTable({ data, isUseFunc }) {
             <TableCell>제목</TableCell>
           </TableHead>
         </thead>
-        <tbody>{createBoardBody(data)}</tbody>
+        <tbody>
+          {createLastNotice(notice)}
+          {createBoardBody(data)}
+        </tbody>
       </Box>
       <PopUp
         isUseFunc={isUseFunc}

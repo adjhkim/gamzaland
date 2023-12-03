@@ -28,6 +28,10 @@ const Rect = styled.div`
   height: 100%;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
 
+  &.hidden {
+    visibility: hidden;
+  }
+
   :active {
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25) inset;
   }
@@ -37,17 +41,51 @@ const PageNo = styled.div`
   font-weight: 400;
 `;
 
-export default function BoardPage() {
+export default function BoardPage(props: {
+  count: number;
+  page: number;
+  setPage: any;
+}) {
+  const createPageList = function (pageCount: number, thisPage: number) {
+    let result: Array<JSX.Element> = [];
+    for (let i = 1; i <= pageCount; i++) {
+      if (i === thisPage) {
+        result.push(
+          <PageNo key={'page' + i} className="active">
+            {i}
+          </PageNo>,
+        );
+      } else {
+        result.push(<PageNo key={'page' + i}>{i}</PageNo>);
+      }
+    }
+    return result;
+  };
+
   return (
     <Box>
-      <Rect>
+      <Rect
+        className={props.page === 1 ? 'hidden' : ''}
+        onClick={() => {
+          if (props.page !== 1) {
+            props.setPage((prevState: number) => prevState - 1);
+          }
+        }}
+      >
         <img
           alt=""
           src={`${process.env.PUBLIC_URL}/public_assets/before.svg`}
         ></img>
       </Rect>
-      <PageNo className="active">1</PageNo>
-      <Rect>
+      {createPageList(props.count, props.page)}
+      <Rect
+        className={props.page === props.count ? 'hidden' : ''}
+        onClick={() => {
+          if (props.page !== props.count) {
+            props.setPage((prevState: number) => prevState + 1);
+          }
+        }}
+      >
         <img
           alt=""
           src={`${process.env.PUBLIC_URL}/public_assets/next.svg`}

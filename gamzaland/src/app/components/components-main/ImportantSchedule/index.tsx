@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 const Box = styled.div`
   display: flex;
+  flex: 0.3;
   flex-direction: column;
   width: 90%;
   margin-top: 5%;
