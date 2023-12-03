@@ -49,6 +49,7 @@ const TableRow = styled.tr`
 
 //테이블 column 스타일(분류, 제목)
 const TableCategory = styled.td`
+  font-size: 0.8rem;
   font-weight: bold;
   width: 20%;
   text-align: center;
@@ -56,18 +57,18 @@ const TableCategory = styled.td`
 `;
 
 const TableCell = styled.td`
+  font-size: 0.8rem;
   width: 80%;
 `;
 //--------------------------------------
 
 //TableCell 내부 게시글 제목, 간단 정보
 const BoardTitle = styled.span`
-  margin-right: 2%;
   user-select: none;
 `;
 
 const BoardInfo = styled.div`
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #b4b4b4;
   user-select: none;
 `;
@@ -311,6 +312,7 @@ export default function BoardTable({ notice, data, isUseFunc }) {
         </ModalInfo>
         <ModalHead>
           <ModalTitle
+            placeholder="제목을 입력하세요."
             className={editClass}
             defaultValue={inputData.title}
             onChange={event =>
@@ -323,6 +325,7 @@ export default function BoardTable({ notice, data, isUseFunc }) {
           ></ModalTitle>
         </ModalHead>
         <ModalContent
+          placeholder="제목을 입력하세요."
           className={editClass}
           defaultValue={inputData.content}
           onChange={event =>

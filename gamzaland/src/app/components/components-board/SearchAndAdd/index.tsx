@@ -327,6 +327,7 @@ export default function SearchAndAdd() {
         </ModalInfo>
         <ModalHead>
           <ModalTitle
+            placeholder="제목을 입력하세요."
             className={editClass}
             onChange={event =>
               setAddValue(prevState => {
@@ -337,6 +338,7 @@ export default function SearchAndAdd() {
           ></ModalTitle>
         </ModalHead>
         <ModalContent
+          placeholder="내용을 입력하세요."
           className={editClass}
           onChange={event =>
             setAddValue(prevState => {

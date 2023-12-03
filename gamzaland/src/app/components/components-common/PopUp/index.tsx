@@ -75,6 +75,7 @@ export function PopUp(props: {
   isAdd?: boolean;
   addBoard?: { category: string; title: string; content: string };
   editBoard?: { category: string; title: string; content: string; no: number };
+  addSchedule?: { content: string; startDate: string; endDate: string };
 }) {
   const wrtId = 0;
   const wrtName = 'gamza';
@@ -128,6 +129,31 @@ export function PopUp(props: {
       const res = await axios.get(`http://localhost:4000/DeleteBoard`, {
         params: {
           no: no,
+        },
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function addSchedule(
+    category: string,
+    content: string,
+    wrtId: number,
+    wrtName: string,
+    startDate: string,
+    endDate: string,
+  ) {
+    try {
+      const res = await axios.get(`http://localhost:4000/AddSchedule`, {
+        params: {
+          category: category,
+          content: content,
+          wrtId: wrtId,
+          wrtName: wrtName,
+          startDate: startDate,
+          endDate: endDate,
         },
       });
       console.log(res);
@@ -206,7 +232,7 @@ export function PopUp(props: {
             show={showSave}
             onClick={() => {
               props.setIsOpen(false);
-              props.isUseFunc(true);
+              props.isUseFunc && props.isUseFunc(true);
               props.addBoard &&
                 addBoard(
                   props.addBoard.category,
@@ -222,6 +248,15 @@ export function PopUp(props: {
                   props.editBoard.content,
                   props.editBoard.no,
                 );
+              props.addSchedule &&
+                addSchedule(
+                  '일반',
+                  props.addSchedule.content,
+                  wrtId,
+                  wrtName,
+                  props.addSchedule.startDate,
+                  props.addSchedule.endDate,
+                );
               props.setIsEdit && props.setIsEdit(false);
               props.setIsEdit && setShowEdit('flex');
               props.setIsEdit && setShowSave('none');
@@ -236,7 +271,7 @@ export function PopUp(props: {
             show={showDelete}
             onClick={() => {
               props.setIsOpen(false);
-              props.isUseFunc(true);
+              props.isUseFunc && props.isUseFunc(true);
               props.editBoard && deleteBoard(props.editBoard.no);
               props.setIsEdit && props.setIsEdit(false);
               props.setIsEdit && setShowEdit('flex');

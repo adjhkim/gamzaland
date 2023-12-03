@@ -1,5 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import CalendarDetail from '../CalendarDetail';
+import { useState } from 'react';
+// import axios from 'axios';
 
 const Box = styled.table`
   width: 90%;
@@ -36,10 +39,10 @@ const TableBodyRow = styled.tr`
     background-color: #fff;
     border-bottom: 1px solid #eee;
     color: #000;
-    padding: 3% 2%;
+    padding: 3% 0;
 
     :active {
-      background-color: #eee;
+      background-color: #f7f2e0;
     }
   }
 
@@ -53,12 +56,16 @@ const TableBodyRow = styled.tr`
 `;
 
 const TableCell = styled.td`
-  & > .notThisMonth {
-    color: #eee;
+  &.active {
+    background-color: #f7f2e0;
+    & > div {
+      color: #000;
+      font-weight: 1000;
+    }
   }
 
-  & > .todayOfCalendar {
-    font-weight: 1000;
+  & > .notThisMonth {
+    color: #eee;
   }
 `;
 
@@ -67,13 +74,35 @@ const DateString = styled.div`
   text-shadow: none;
 `;
 
-const ScheduleBar = styled.div`
-  width: 60%;
-  height: 0.5rem;
-  margin: 5% auto 0 auto;
-  background-color: #a9d0f5;
+const CalendarIcon = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  height: 0.9rem;
+  margin-top: 8%;
+`;
+
+const TodayMark = styled.span<{ show?: string }>`
+  font-size: 0.5rem;
+  font-weight: bold;
+  text-shadow: none;
+  color: #000;
+  width: 40%;
+  background-color: #faac58;
   border-radius: 100px;
-  /* visibility: hidden; */
+  display: ${props => props.show || 'none'};
+`;
+
+const ScheduleCount = styled.span<{ show?: string }>`
+  font-size: 0.5rem;
+  font-weight: bold;
+  text-shadow: none;
+  color: #000;
+  width: 40%;
+  background-color: #faac58;
+  border-radius: 100px;
+  display: ${props => props.show || 'inline'};
 `;
 
 export default function CalendarTable({
@@ -85,6 +114,7 @@ export default function CalendarTable({
   inputMonth: number;
   today: Date;
 }) {
+  //테이블 헤드 요일 표시
   const weekName = ['일', '월', '화', '수', '목', '금', '토'];
   const createCalendarHead = function () {
     let result: Array<JSX.Element> = [];
@@ -93,15 +123,21 @@ export default function CalendarTable({
     }
     return result;
   };
+  //--------------------------------------
 
+  //선택된 Month 첫번째 날짜 요일 확인
   const firstDay = new Date(inputYear, inputMonth - 1, 1);
   const firstDayWeek = firstDay.getDay();
+  //--------------------------------------
 
+  //첫번째 날짜를 기준으로 Date 생성
   const nowDay = function (day: number) {
     let result = new Date(firstDay.getFullYear(), firstDay.getMonth(), 1 + day);
     return result;
   };
+  //--------------------------------------
 
+  //입력한 날짜를 YYYY-MM 포맷으로 변환
   const createDateString = function (date: Date) {
     let month = '';
     if (date.getMonth() + 1 > 9) {
@@ -118,7 +154,42 @@ export default function CalendarTable({
     }
     return month + '-' + day;
   };
+  //--------------------------------------
 
+  //선택한 날짜 데이터 상태 관리
+  const [selectDay, setSelectDay] = useState(
+    new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+  );
+  const [dayString, setDayString] = useState(
+    today.getFullYear() +
+      '년 ' +
+      createDateString(today).split('-')[0] +
+      '월 ' +
+      createDateString(today).split('-')[1] +
+      '일 ' +
+      '(' +
+      weekName[today.getDay()] +
+      ')',
+  );
+  //--------------------------------------
+
+  //선택된 날짜의 일정 COUNT DB 호출
+  // const [scheduleCount, setScheduleCount] = useState(0);
+  // async function getScheduleCount(date: string) {
+  //   try {
+  //     const res = await axios.get('http://localhost:4000/ScheduleCount', {
+  //       params: {
+  //         date: date,
+  //       },
+  //     });
+  //     return res.data[0].count;
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+  //--------------------------------------
+
+  //입력한 행(row)에 나올 table cell 생성
   const createCalendarCell = function (row: number) {
     let result: Array<JSX.Element> = [];
     for (let i = 0; i < 7; i++) {
@@ -131,25 +202,63 @@ export default function CalendarTable({
         today.getDate(),
       );
 
-      let getClassName = '';
+      let getStringClass = '';
       if (thisMonth !== inputMonth) {
-        getClassName = 'notThisMonth';
-      } else if (thisDay.getTime() === todayNoTime.getTime()) {
-        getClassName = 'todayOfCalendar';
+        getStringClass = 'notThisMonth';
+      }
+
+      let getDisplay = '';
+      if (todayNoTime.getTime() === thisDay.getTime()) {
+        getDisplay = 'inline';
+      }
+
+      let getCellClass = '';
+      if (selectDay.getTime() === thisDay.getTime()) {
+        getCellClass = 'active';
       }
 
       result.push(
-        <TableCell key={'cell' + row + i}>
-          <DateString key={'date' + row + i} className={getClassName}>
+        <TableCell
+          className={getCellClass}
+          key={'cell' + row + i}
+          onClick={() => {
+            setDayString(
+              thisDay.getFullYear() +
+                '년 ' +
+                thisYearMonth.split('-')[0] +
+                '월 ' +
+                thisYearMonth.split('-')[1] +
+                '일 ' +
+                '(' +
+                weekName[thisDay.getDay()] +
+                ')',
+            );
+            setSelectDay(
+              new Date(
+                thisDay.getFullYear(),
+                thisDay.getMonth(),
+                thisDay.getDate(),
+              ),
+            );
+          }}
+        >
+          <DateString key={'date' + row + i} className={getStringClass}>
             {thisYearMonth}
           </DateString>
-          <ScheduleBar key={'bar' + row + i}></ScheduleBar>
+          <CalendarIcon key={'icon' + row + i}>
+            <TodayMark key={'mark' + row + i} show={getDisplay}>
+              {'오늘'}
+            </TodayMark>
+            <ScheduleCount key={'count' + row + i}>{1}</ScheduleCount>
+          </CalendarIcon>
         </TableCell>,
       );
     }
     return result;
   };
+  //--------------------------------------
 
+  //달력 행(row) 생성
   const createCalendarBody = function () {
     let result: Array<JSX.Element> = [];
     for (let i = 0; i < 6; i++) {
@@ -159,13 +268,17 @@ export default function CalendarTable({
     }
     return result;
   };
+  //--------------------------------------
 
   return (
-    <Box>
-      <TableHead>
-        <TableHeadRow>{createCalendarHead()}</TableHeadRow>
-      </TableHead>
-      <TableBody>{createCalendarBody()}</TableBody>
-    </Box>
+    <>
+      <Box>
+        <TableHead>
+          <TableHeadRow>{createCalendarHead()}</TableHeadRow>
+        </TableHead>
+        <TableBody>{createCalendarBody()}</TableBody>
+      </Box>
+      <CalendarDetail title={dayString} selectDay={selectDay}></CalendarDetail>
+    </>
   );
 }
