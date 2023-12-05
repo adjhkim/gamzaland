@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import CalendarDetail from '../CalendarDetail';
-import { useState } from 'react';
-// import axios from 'axios';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Box = styled.table`
   width: 90%;
@@ -102,7 +102,7 @@ const ScheduleCount = styled.span<{ show?: string }>`
   width: 40%;
   background-color: #faac58;
   border-radius: 100px;
-  display: ${props => props.show || 'inline'};
+  display: ${props => props.show || 'none'};
 `;
 
 export default function CalendarTable({
@@ -173,20 +173,58 @@ export default function CalendarTable({
   );
   //--------------------------------------
 
-  //선택된 날짜의 일정 COUNT DB 호출
-  // const [scheduleCount, setScheduleCount] = useState(0);
-  // async function getScheduleCount(date: string) {
-  //   try {
-  //     const res = await axios.get('http://localhost:4000/ScheduleCount', {
-  //       params: {
-  //         date: date,
-  //       },
-  //     });
-  //     return res.data[0].count;
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+  //선택된 year, month의 전체 DB 호출
+  const [monthData, setMonthData] = useState('');
+
+  async function getMonthData(year: number, month: number) {
+    const thisFirstDay = new Date(year, month - 1, 1);
+    try {
+      const res = await axios.get('http://localhost:4000/CalendarData', {
+        params: {
+          start: new Date(
+            thisFirstDay.getFullYear(),
+            thisFirstDay.getMonth(),
+            1 + (0 - thisFirstDay.getDay() + 0 * 7),
+          ),
+          end: new Date(
+            thisFirstDay.getFullYear(),
+            thisFirstDay.getMonth(),
+            1 + (6 - thisFirstDay.getDay() + 5 * 7),
+          ),
+        },
+      });
+      setMonthData(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const [isUseFunc, setIsUseFunc] = useState(false);
+  useEffect(() => {
+    if (isUseFunc === false) {
+      getMonthData(inputYear, inputMonth);
+    } else {
+      getMonthData(inputYear, inputMonth);
+      setIsUseFunc(false);
+    }
+  }, [inputYear, inputMonth, isUseFunc]);
+  //--------------------------------------
+
+  //날짜에 해당하는 일정 갯수 출력 함수
+  const createScheduleCount = function (inputData: any, thisDay: Date) {
+    const newMonthData: Array<any> = [];
+    for (let i = 0; i < inputData.length; i++) {
+      const start = new Date(inputData[i].startDate);
+      const end = new Date(inputData[i].endDate);
+      if (
+        start.getTime() <= thisDay.getTime() &&
+        end.getTime() >= thisDay.getTime()
+      ) {
+        newMonthData.push(inputData[i]);
+      }
+    }
+    return newMonthData.length;
+  };
   //--------------------------------------
 
   //입력한 행(row)에 나올 table cell 생성
@@ -215,6 +253,11 @@ export default function CalendarTable({
       let getCellClass = '';
       if (selectDay.getTime() === thisDay.getTime()) {
         getCellClass = 'active';
+      }
+
+      let getCountClass = '';
+      if (createScheduleCount(monthData, thisDay) > 0) {
+        getCountClass = 'inline';
       }
 
       result.push(
@@ -249,7 +292,9 @@ export default function CalendarTable({
             <TodayMark key={'mark' + row + i} show={getDisplay}>
               {'오늘'}
             </TodayMark>
-            <ScheduleCount key={'count' + row + i}>{1}</ScheduleCount>
+            <ScheduleCount show={getCountClass} key={'count' + row + i}>
+              {createScheduleCount(monthData, thisDay)}
+            </ScheduleCount>
           </CalendarIcon>
         </TableCell>,
       );
@@ -278,7 +323,12 @@ export default function CalendarTable({
         </TableHead>
         <TableBody>{createCalendarBody()}</TableBody>
       </Box>
-      <CalendarDetail title={dayString} selectDay={selectDay}></CalendarDetail>
+      <CalendarDetail
+        title={dayString}
+        selectDay={selectDay}
+        isUseFunc={isUseFunc}
+        setIsUseFunc={setIsUseFunc}
+      ></CalendarDetail>
     </>
   );
 }

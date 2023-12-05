@@ -144,7 +144,7 @@ const DetailContent = styled.span`
 
 const DetailFunction = styled.span`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   width: 25%;
 `;
@@ -203,6 +203,8 @@ const ModalContent = styled.input`
 export default function CalendarDetail(props: {
   title: string;
   selectDay: Date;
+  isUseFunc: boolean;
+  setIsUseFunc: any;
 }) {
   //10보다 낮은 숫자를 0n 포맷으로 변경
   const setFormat = function (inputNum: number) {
@@ -236,12 +238,13 @@ export default function CalendarDetail(props: {
   //--------------------------------------
 
   //모달 창 상태 제어
+  const [modalName, setModalName] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
   //--------------------------------------
 
   //모달 창 팝업 : 일정
-  const openScheduleAdd = function () {
+  const openSchedule = function () {
     return (
       <>
         <ModalInputName>시작일</ModalInputName>
@@ -334,8 +337,28 @@ export default function CalendarDetail(props: {
   }
 
   useEffect(() => {
-    getScheduleData(props.selectDay);
-  }, [props.selectDay]);
+    if (props.isUseFunc === false) {
+      getScheduleData(props.selectDay);
+    } else {
+      getScheduleData(props.selectDay);
+      props.setIsUseFunc(false);
+    }
+  }, [props.selectDay, props]);
+  //--------------------------------------
+
+  //선택한 일정 삭제
+  async function deleteSchedule(no: number) {
+    try {
+      const res = await axios.get('http://localhost:4000/DeleteSchedule', {
+        params: {
+          no: no,
+        },
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   //--------------------------------------
 
   //전송받은 DB 데이터로 일정 상세 정보 생성
@@ -355,13 +378,12 @@ export default function CalendarDetail(props: {
             </DetailContent>
           </DetailInfo>
           <DetailFunction key={'DFunc' + i}>
-            <RowButton>
-              <img
-                alt=""
-                src={`${process.env.PUBLIC_URL}/public_assets/edit.svg`}
-              ></img>
-            </RowButton>
-            <RowButton>
+            <RowButton
+              onClick={() => {
+                deleteSchedule(inputData[i].no);
+                props.setIsUseFunc(true);
+              }}
+            >
               <img
                 alt=""
                 src={`${process.env.PUBLIC_URL}/public_assets/delete.svg`}
@@ -374,6 +396,7 @@ export default function CalendarDetail(props: {
     return result;
   };
   //--------------------------------------
+
   return (
     <>
       <Box>
@@ -388,6 +411,7 @@ export default function CalendarDetail(props: {
           <BoxFooter>
             <FooterButton
               onClick={() => {
+                setModalName('일정 추가');
                 setIsOpen(true);
                 setIsAdd(true);
               }}
@@ -401,8 +425,9 @@ export default function CalendarDetail(props: {
         </BoxContent>
       </Box>
       <PopUp
-        title={'일정 추가'}
-        content={openScheduleAdd()}
+        isUseFunc={props.setIsUseFunc}
+        title={modalName}
+        content={openSchedule()}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         isAdd={isAdd}
