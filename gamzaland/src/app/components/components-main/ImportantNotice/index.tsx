@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 const Box = styled.div`
   display: flex;
-  flex: 0.7;
   flex-direction: column;
   width: 90%;
   margin-top: 5%;
@@ -25,56 +24,43 @@ const BoxTitle = styled.div`
 `;
 
 const BoxContent = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   width: 100%;
-  padding: 3%;
+  padding: 1% 3%;
   background-color: #fff;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 0.75rem;
   color: #000;
+  text-shadow: none;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
   border-radius: 0 4px 4px 4px;
 `;
 
-const InnerHead = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  border-bottom: 1px solid #a4a4a4;
-  padding-bottom: 2%;
-  margin-bottom: 2%;
-`;
-
-const InnerTitle = styled.input`
+const InnerTitle = styled.div`
   width: 100%;
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 0.8rem;
   font-weight: bold;
   outline: 0;
   border: 0;
-  padding: 2%;
+  padding: 2% 4%;
+  margin: 2% 0;
   user-select: none;
+  background-color: #f7f2e0;
+  box-shadow: 2px 2px 6px -2px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
 `;
 
-const InnerContent = styled.textarea`
+const InnerContent = styled.div`
   width: 100%;
-  flex: 1;
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 0.8rem;
   outline: 0;
   border: 0;
-  padding: 2%;
+  padding: 2% 4%;
+  margin: 2% 0;
+  background-color: #f7f2e0;
+  box-shadow: 2px 2px 6px -2px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
   user-select: none;
-  resize: none;
-  overflow: auto;
-  ::-webkit-scrollbar {
-    display: none;
-  }
+  white-space: pre-wrap;
 `;
 
 export default function ImportantNotice() {
@@ -97,18 +83,10 @@ export default function ImportantNotice() {
     for (let i = 0; i < inputData.length; i++) {
       result.push(
         <React.Fragment key={'notice' + i}>
-          <InnerHead key={'noticeHead' + i}>
-            <InnerTitle
-              key={'noticeTitle' + i}
-              defaultValue={inputData[i].title}
-              readOnly
-            ></InnerTitle>
-          </InnerHead>
-          <InnerContent
-            key={'noticeContent' + i}
-            defaultValue={inputData[i].content}
-            readOnly
-          ></InnerContent>
+          <InnerTitle key={'noticeTitle' + i}>{inputData[i].title}</InnerTitle>
+          <InnerContent key={'noticeContent' + i}>
+            {inputData[i].content}
+          </InnerContent>
         </React.Fragment>,
       );
     }

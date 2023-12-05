@@ -6,6 +6,7 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   width: 90%;
+  flex: 0.15;
   margin-top: 5%;
 `;
 
