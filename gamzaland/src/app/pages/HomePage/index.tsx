@@ -28,13 +28,13 @@ const Container = styled.div`
   }
 `;
 
-const Content = styled.div`
+const Content = styled.div<{ login?: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 92.5%;
+  height: ${props => (props.login ? '100%' : '92.5%')};
   padding-bottom: 5%;
   background-color: #f6e3ce;
   overflow: auto;
@@ -43,7 +43,7 @@ const Content = styled.div`
   }
 `;
 
-export function HomePage(props: { content: JSX.Element }) {
+export function HomePage(props: { content: JSX.Element; login?: boolean }) {
   return (
     <>
       <Helmet>
@@ -56,8 +56,8 @@ export function HomePage(props: { content: JSX.Element }) {
       </Helmet>
       <Background>
         <Container>
-          <Header></Header>
-          <Content>{props.content}</Content>
+          {props.login ? <></> : <Header></Header>}
+          <Content login={props.login}>{props.content}</Content>
         </Container>
       </Background>
     </>

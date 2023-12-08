@@ -11,6 +11,7 @@ import { Helmet } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GlobalStyle } from 'styles/global-styles';
 import { NotFoundPage } from './pages/NotFoundPage/Loadable';
+import { Login } from './pages/Login/Loadable';
 import { Main } from './pages/Main/Loadable';
 import { Board } from './pages/Board/Loadable';
 import { Calendar } from './pages/Calendar/Loadable';
@@ -30,6 +31,7 @@ export function App() {
       </Helmet>
 
       <Routes>
+        <Route path="login" element={<Login />} />
         <Route path="/" element={<Main />} />
         <Route path="board" element={<Board />} />
         <Route path="calendar" element={<Calendar />} />
