@@ -103,17 +103,30 @@ export default function ImportantSchedule() {
 
   const createSoonSchedule = function (inputData: any) {
     let result: Array<JSX.Element> = [];
-    for (let i = 0; i < inputData.length; i++) {
+    if (inputData.length > 0) {
+      for (let i = 0; i < inputData.length; i++) {
+        result.push(
+          <React.Fragment key={'soon' + i}>
+            <DetailRow key={'SRow' + i}>
+              <DetailDate key={'SDate' + i}>
+                {createYearMonth(new Date(inputData[i].startDate)) +
+                  ' ~ ' +
+                  createYearMonth(new Date(inputData[i].endDate))}
+              </DetailDate>
+              <DetailContent key={'SContent' + i}>
+                {inputData[i].content}
+              </DetailContent>
+            </DetailRow>
+          </React.Fragment>,
+        );
+      }
+    } else {
       result.push(
-        <React.Fragment key={'soon' + i}>
-          <DetailRow key={'SRow' + i}>
-            <DetailDate key={'SDate' + i}>
-              {createYearMonth(new Date(inputData[i].startDate)) +
-                ' ~ ' +
-                createYearMonth(new Date(inputData[i].endDate))}
-            </DetailDate>
-            <DetailContent key={'SContent' + i}>
-              {inputData[i].content}
+        <React.Fragment key={'soon' + 0}>
+          <DetailRow key={'SRow' + 0}>
+            <DetailDate key={'SDate' + 0}>{'T^T'}</DetailDate>
+            <DetailContent key={'SContent' + 0}>
+              {'이런! 아쉽게도 다가올 일정이 없어요.'}
             </DetailContent>
           </DetailRow>
         </React.Fragment>,
