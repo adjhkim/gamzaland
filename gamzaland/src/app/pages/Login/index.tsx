@@ -2,6 +2,9 @@ import * as React from 'react';
 import { HomePage } from '../HomePage';
 import styled from 'styled-components';
 import { useState } from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -90,6 +93,22 @@ export function Login() {
   const [error, setError] = useState('');
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:4000/CheckLogin', {
+        nickname,
+        password,
+      });
+      const token = response.data.token;
+      Cookies.set('jwtToken', token);
+      navigate('/');
+    } catch (err) {
+      console.log(err);
+      setError('회원 정보를 정확히 입력해 주세요.');
+    }
+  };
 
   const loadLogin = function () {
     return (
@@ -119,6 +138,7 @@ export function Login() {
                   setError('닉네임과 비밀번호를 입력해 주세요.');
                 } else {
                   setError('');
+                  handleLogin();
                 }
               }}
             >
