@@ -2,6 +2,10 @@ import { Header } from 'app/components/components-common/Header';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const Background = styled.div`
   display: flex;
@@ -43,7 +47,32 @@ const Content = styled.div<{ login?: boolean }>`
   }
 `;
 
+axios.defaults.baseURL = 'http://localhost:4000';
+axios.defaults.withCredentials = true;
+
 export function HomePage(props: { content: JSX.Element; login?: boolean }) {
+  const [user, setUser] = useState({ no: 0, nickname: '', iat: 0, exp: 0 });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = Cookies.get('jwtToken');
+    if (token) {
+      axios
+        .get('http://localhost:4000/Protected', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(response => {
+          setUser(response.data.user);
+        })
+        .catch(error => {
+          console.error('Error fetching protected data:', error.message);
+          navigate('/login');
+        });
+    } else {
+      navigate('/login');
+    }
+  }, [navigate]);
+
   return (
     <>
       <Helmet>
@@ -56,7 +85,7 @@ export function HomePage(props: { content: JSX.Element; login?: boolean }) {
       </Helmet>
       <Background>
         <Container>
-          {props.login ? <></> : <Header></Header>}
+          {props.login ? <></> : <Header nickname={user.nickname}></Header>}
           <Content login={props.login}>{props.content}</Content>
         </Container>
       </Background>

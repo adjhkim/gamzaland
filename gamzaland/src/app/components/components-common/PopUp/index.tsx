@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
 import styled from 'styled-components';
+import Cookies from 'js-cookie';
 
 const ModalHeader = styled.div`
   display: flex;
@@ -77,8 +78,25 @@ export function PopUp(props: {
   editBoard?: { category: string; title: string; content: string; no: number };
   addSchedule?: { content: string; startDate: string; endDate: string };
 }) {
-  const wrtId = 0;
-  const wrtName = 'gamza';
+  const [wrtId, setWrtId] = useState(0);
+  const [wrtName, setWrtName] = useState('');
+
+  useEffect(() => {
+    const token = Cookies.get('jwtToken');
+    if (token) {
+      axios
+        .get('http://localhost:4000/Protected', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(response => {
+          setWrtId(response.data.user.no);
+          setWrtName(response.data.user.nickname);
+        })
+        .catch(error => {
+          console.error('Error fetching protected data:', error.message);
+        });
+    }
+  }, []);
 
   async function addBoard(
     category: string,
@@ -115,6 +133,8 @@ export function PopUp(props: {
           category: category,
           title: title,
           content: content,
+          wrtId: wrtId,
+          wrtName: wrtName,
           no: no,
         },
       });
